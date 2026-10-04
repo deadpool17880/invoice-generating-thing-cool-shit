@@ -10,13 +10,17 @@
       theme: {
         extend: {
           colors: {
-            brand: {
-              50: '#f0fdf4',
-              100: '#dcfce7',
-              500: '#22c55e',
-              600: '#16a34a',
-              700: '#15803d',
-              900: '#14532d',
+            gold: {
+              50: '#fdf8eb',
+              100: '#fae9c9',
+              200: '#f5d297',
+              300: '#efbd66',
+              400: '#eaa73d',
+              500: '#d4af37',
+              600: '#b3952e',
+              700: '#917724',
+              800: '#735c1b',
+              900: '#5a4914',
             }
           }
         }
@@ -24,11 +28,11 @@
     }
   </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+    * { scroll-behavior: smooth; }
     body {
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
     .badge-pulse {
       animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -37,58 +41,68 @@
       0%, 100% { opacity: 1; }
       50% { opacity: .4; }
     }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeInUp 0.6s ease-out forwards; }
+    .gold-glow { box-shadow: 0 0 20px rgba(212, 175, 55, 0.15); }
+    .gold-glow:hover { box-shadow: 0 0 30px rgba(212, 175, 55, 0.25); }
+    .card-hover { transition: transform 0.2s ease, border-color 0.2s ease; }
+    .card-hover:hover { transform: translateY(-2px); }
+    button, a, input { transition: all 0.2s ease; }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-emerald-500 selection:text-slate-950">
+<body class="bg-[#020407] text-slate-100 min-h-screen flex flex-col antialiased selection:bg-gold-500 selection:text-black">
 
   <!-- TOP APP NAV -->
-  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+  <header class="border-b border-[#1a262f] bg-[#0a0e14]/90 backdrop-blur-xl sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-slate-950 font-extrabold shadow-lg shadow-emerald-500/20 text-lg">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-gold-500 to-gold-400 flex items-center justify-center text-black font-extrabold shadow-lg shadow-gold-500/20 text-lg">
           <i class="fa-solid fa-bolt-lightning"></i>
         </div>
         <div>
           <div class="flex items-center space-x-2">
-            <span class="font-bold text-lg tracking-tight text-white">FlowLedger</span>
-            <span class="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded-full font-semibold border border-emerald-500/20">Autopilot Active</span>
+            <span class="font-bold text-lg tracking-tight text-gold-500">FlowLedger</span>
+            <span class="bg-gold-500/10 text-gold-400 text-xs px-2 py-0.5 rounded-full font-semibold border border-gold-500/20">Autopilot Active</span>
           </div>
-          <p class="text-xs text-slate-400">Zero-Friction Invoice-to-Cash Assistant</p>
+          <p class="text-xs text-slate-500">Zero-Friction Invoice-to-Cash Assistant</p>
         </div>
       </div>
 
       <!-- Site Navigation Links -->
       <div class="hidden lg:flex items-center space-x-5 text-xs font-semibold">
-        <a href="index.html" class="text-emerald-400 font-bold">App</a>
-        <a href="pricing.html" class="text-slate-400 hover:text-white transition">Pricing</a>
-        <a href="presentation.html" class="text-slate-400 hover:text-white transition">Pitch Deck</a>
-        <a href="docs.html" class="text-slate-400 hover:text-white transition">Docs</a>
+        <a href="index.html" class="text-gold-400 font-bold">App</a>
+        <a href="pricing.html" class="text-slate-500 hover:text-gold-400 transition">Pricing</a>
+        <a href="presentation.html" class="text-slate-500 hover:text-gold-400 transition">Pitch Deck</a>
+        <a href="docs.html" class="text-slate-500 hover:text-gold-400 transition">Docs</a>
       </div>
 
       <!-- Quick Metrics Pill -->
-      <div class="hidden xl:flex items-center space-x-6 text-xs bg-slate-800/80 px-4 py-2 rounded-full border border-slate-700/60">
+      <div class="hidden xl:flex items-center space-x-6 text-xs bg-[#0a0e14] px-4 py-2 rounded-full border border-[#1a262f]">
         <div>
-          <span class="text-slate-400">Uncollected:</span>
+          <span class="text-slate-500">Uncollected:</span>
           <span id="headerOutstanding" class="font-bold text-amber-400 ml-1">$4,850</span>
         </div>
-        <div class="h-3 w-px bg-slate-700"></div>
+        <div class="h-3 w-px bg-[#1a262f]"></div>
         <div>
-          <span class="text-slate-400">Collected this month:</span>
-          <span id="headerCollected" class="font-bold text-emerald-400 ml-1">$12,400</span>
+          <span class="text-slate-500">Collected this month:</span>
+          <span id="headerCollected" class="font-bold text-gold-400 ml-1">$12,400</span>
         </div>
-        <div class="h-3 w-px bg-slate-700"></div>
-        <div class="flex items-center text-emerald-400">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 mr-1.5 badge-pulse"></span>
+        <div class="h-3 w-px bg-[#1a262f]"></div>
+        <div class="flex items-center text-gold-400">
+          <span class="w-2 h-2 rounded-full bg-gold-400 mr-1.5 badge-pulse"></span>
           Bank Feed Synced
         </div>
       </div>
 
       <!-- View Switcher Tabs -->
-      <div class="flex bg-slate-800 p-1 rounded-xl border border-slate-700">
-        <button id="tabOwnerBtn" onclick="switchView('owner')" class="px-4 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500 text-slate-950 shadow transition-all">
+      <div class="flex bg-[#10181f] p-1 rounded-xl border border-[#1a262f]">
+        <button id="tabOwnerBtn" onclick="switchView('owner')" class="px-4 py-1.5 rounded-lg text-xs font-semibold bg-gold-500 text-black shadow transition-all">
           <i class="fa-solid fa-user-tie mr-1.5"></i> SME Owner View
         </button>
-        <button id="tabClientBtn" onclick="switchView('client')" class="px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all">
+        <button id="tabClientBtn" onclick="switchView('client')" class="px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-white transition-all">
           <i class="fa-solid fa-credit-card mr-1.5"></i> Client Payment Portal
         </button>
       </div>
@@ -98,111 +112,133 @@
   <!-- MAIN WRAPPER -->
   <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-8">
 
+    <!-- HERO SECTION -->
+    <section class="relative overflow-hidden rounded-3xl bg-[#0a0e14] border border-[#1a262f] py-16 md:py-24 text-center fade-in">
+      <div class="absolute -top-20 -right-20 w-80 h-80 bg-gold-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-20 -left-20 w-96 h-96 bg-gold-500/5 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="relative z-10 max-w-3xl mx-auto px-4">
+        <div class="inline-flex items-center px-3 py-1 bg-gold-500/10 border border-gold-500/20 rounded-full text-xs font-semibold text-gold-400 mb-6">
+          <i class="fa-solid fa-sparkles mr-1.5"></i> AI-Powered Autonomous Invoicing
+        </div>
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
+          Invoice Smarter.<br>
+          <span class="bg-gradient-to-r from-gold-400 to-gold-600 bg-clip-text text-transparent">Get Paid Faster.</span>
+        </h1>
+        <p class="mt-5 text-base md:text-lg text-slate-400 max-w-xl mx-auto leading-relaxed">
+          Generate professional invoices, dispatch them instantly, and let AI handle follow-ups — all from one dashboard.
+        </p>
+        <a href="#invoiceForm" class="mt-8 inline-flex items-center px-6 py-3 bg-gold-500 text-black font-bold rounded-xl shadow-lg shadow-gold-500/20 hover:bg-gold-400 transition gold-glow text-sm">
+          <i class="fa-solid fa-bolt-lightning mr-2"></i> Create Your First Invoice
+        </a>
+      </div>
+      <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-500/30 to-transparent"></div>
+    </section>
+
     <!-- VIEW 1: SME OWNER ASSISTANT COCKPIT -->
-    <div id="viewOwner" class="space-y-6">
+    <div id="viewOwner" class="space-y-6 fade-in">
 
       <!-- AI ASSISTANT HERO BAR: NLP DRAFTING -->
-      <div class="relative overflow-hidden bg-gradient-to-r from-slate-900 via-slate-900 to-emerald-950/40 border border-slate-800 rounded-2xl p-5 shadow-2xl">
-        <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div id="invoiceForm" class="relative overflow-hidden bg-[#0a0e14] border border-[#1a262f] rounded-2xl p-5 shadow-2xl card-hover">
+        <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-gold-500/5 rounded-full blur-3xl pointer-events-none"></div>
         
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div class="space-y-1">
             <div class="flex items-center space-x-2">
-              <span class="text-xs uppercase tracking-wider font-extrabold text-emerald-400 flex items-center">
+              <span class="text-xs uppercase tracking-wider font-extrabold text-gold-400 flex items-center">
                 <i class="fa-solid fa-file-invoice-dollar mr-1.5"></i> Direct Invoice Dispatch Engine
               </span>
-              <span class="text-slate-500 text-xs">• Instant Clean Invoice &amp; Direct Gmail Dispatch</span>
+              <span class="text-slate-600 text-xs">• Instant Clean Invoice &amp; Direct Gmail Dispatch</span>
             </div>
             <h2 class="text-xl font-bold text-white tracking-tight">Create &amp; Dispatch Real Invoice</h2>
-            <p class="text-xs text-slate-400">Fill in the 4 key invoice details + client's Gmail address to send the bill instantly.</p>
+            <p class="text-xs text-slate-500">Fill in the 4 key invoice details + client's Gmail address to send the bill instantly.</p>
           </div>
         </div>
 
         <!-- Structured 5-Field Invoice Creation Form -->
-        <div class="mt-5 bg-slate-950/80 p-5 rounded-2xl border border-slate-800 space-y-4">
+        <div class="mt-5 bg-[#10181f] p-5 rounded-2xl border border-[#1a262f] space-y-4">
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
             <!-- 1. Company Name -->
             <div class="space-y-1">
-              <label class="text-[11px] font-bold uppercase tracking-wider text-slate-300 flex items-center">
-                <i class="fa-solid fa-building text-emerald-400 mr-1.5"></i> 1. Company Name
+              <label class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center">
+                <i class="fa-solid fa-building text-gold-400 mr-1.5"></i> 1. Company Name
               </label>
               <input 
                 id="companyNameInput"
                 type="text" 
                 placeholder="e.g. Acme Innovations" 
-                class="w-full bg-slate-900 border border-slate-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition"
+                class="w-full bg-[#0a0e14] border border-[#1a262f] focus:border-gold-500 focus:ring-1 focus:ring-gold-500 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-600 outline-none transition"
               />
             </div>
 
             <!-- 2. Bill Amount -->
             <div class="space-y-1">
-              <label class="text-[11px] font-bold uppercase tracking-wider text-slate-300 flex items-center">
-                <i class="fa-solid fa-dollar-sign text-emerald-400 mr-1.5"></i> 2. Amount ($)
+              <label class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center">
+                <i class="fa-solid fa-dollar-sign text-gold-400 mr-1.5"></i> 2. Amount ($)
               </label>
               <input 
                 id="billAmountInput"
                 type="number" 
                 placeholder="e.g. 2400" 
-                class="w-full bg-slate-900 border border-slate-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition"
+                class="w-full bg-[#0a0e14] border border-[#1a262f] focus:border-gold-500 focus:ring-1 focus:ring-gold-500 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-600 outline-none transition"
               />
             </div>
 
             <!-- 3. Deadline -->
             <div class="space-y-1">
-              <label class="text-[11px] font-bold uppercase tracking-wider text-slate-300 flex items-center">
-                <i class="fa-solid fa-calendar-day text-emerald-400 mr-1.5"></i> 3. Deadline to Pay Off
+              <label class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center">
+                <i class="fa-solid fa-calendar-day text-gold-400 mr-1.5"></i> 3. Deadline to Pay Off
               </label>
               <input 
                 id="deadLineInput"
                 type="text" 
                 placeholder="e.g. Oct 20, 2026 or 7 Days" 
-                class="w-full bg-slate-900 border border-slate-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition"
+                class="w-full bg-[#0a0e14] border border-[#1a262f] focus:border-gold-500 focus:ring-1 focus:ring-gold-500 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-600 outline-none transition"
               />
             </div>
 
             <!-- 4. Products / Services Taken -->
             <div class="space-y-1">
-              <label class="text-[11px] font-bold uppercase tracking-wider text-slate-300 flex items-center">
-                <i class="fa-solid fa-boxes-stacked text-emerald-400 mr-1.5"></i> 4. Products Took
+              <label class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center">
+                <i class="fa-solid fa-boxes-stacked text-gold-400 mr-1.5"></i> 4. Products Took
               </label>
               <input 
                 id="productsInput"
                 type="text" 
                 placeholder="e.g. 5x UI Screens, Cloud Setup" 
-                class="w-full bg-slate-900 border border-slate-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition"
+                class="w-full bg-[#0a0e14] border border-[#1a262f] focus:border-gold-500 focus:ring-1 focus:ring-gold-500 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-600 outline-none transition"
               />
             </div>
           </div>
 
           <!-- 5. Client's Gmail Address -->
           <div class="space-y-1">
-            <label class="text-[11px] font-bold uppercase tracking-wider text-slate-300 flex items-center justify-between">
+            <label class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
               <span class="flex items-center">
                 <i class="fa-brands fa-google text-red-400 mr-1.5"></i> 5. Client's Gmail Address (Direct Send Destination)
               </span>
-              <span class="text-[10px] text-slate-500 font-normal">will receive bill with subject: "pay me the bill"</span>
+              <span class="text-[10px] text-slate-600 font-normal">will receive bill with subject: "pay me the bill"</span>
             </label>
             <div class="relative">
               <i class="fa-brands fa-google absolute left-3.5 top-3 text-red-400 text-sm"></i>
               <input 
                 id="clientGmailInput"
                 type="email" 
-                placeholder="e.g. plavanya3344@gmail.com" 
-                class="w-full bg-slate-900 border border-slate-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition"
+                placeholder="e.g. client@gmail.com" 
+                class="w-full bg-[#0a0e14] border border-[#1a262f] focus:border-gold-500 focus:ring-1 focus:ring-gold-500 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-600 outline-none transition"
               />
             </div>
           </div>
 
           <!-- Action Button & Summary Info -->
           <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div class="text-[11px] text-slate-400 flex items-center gap-2">
-              <span class="text-emerald-400 font-bold"><i class="fa-solid fa-circle-check mr-1"></i> Direct Gmail Transmission:</span>
+            <div class="text-[11px] text-slate-500 flex items-center gap-2">
+              <span class="text-gold-400 font-bold"><i class="fa-solid fa-circle-check mr-1"></i> Direct Gmail Transmission:</span>
               <span>Subject: <b class="text-white">"pay me the bill"</b> &bull; Includes bill amount, deadline to payoff money, and products took.</span>
             </div>
             <button 
               id="generateSendBtn"
               onclick="createNewInvoiceAndSend()"
-              class="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-8 py-3 rounded-xl text-xs flex items-center justify-center space-x-2 shadow-lg shadow-emerald-500/25 transition active:scale-95 whitespace-nowrap">
+              class="w-full sm:w-auto bg-gold-500 hover:bg-gold-400 text-black font-black px-8 py-3 rounded-xl text-xs flex items-center justify-center space-x-2 shadow-lg shadow-gold-500/25 transition active:scale-95 whitespace-nowrap gold-glow">
               <span id="sendBtnText">Generate Invoice &amp; Send to Gmail</span>
               <i class="fa-solid fa-paper-plane text-xs"></i>
             </button>
@@ -210,9 +246,9 @@
         </div>
 
         <!-- Notification banner after drafting -->
-        <div id="draftFeedback" class="hidden mt-3 p-3.5 rounded-xl bg-emerald-950/80 border border-emerald-700 text-xs text-emerald-200 flex items-center justify-between shadow-lg">
+        <div id="draftFeedback" class="hidden mt-3 p-3.5 rounded-xl bg-gold-900/40 border border-gold-700 text-xs text-gold-200 flex items-center justify-between shadow-lg">
           <span id="draftFeedbackText"></span>
-          <button onclick="this.parentElement.classList.add('hidden')" class="text-emerald-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+          <button onclick="this.parentElement.classList.add('hidden')" class="text-gold-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
         </div>
       </div>
 
@@ -225,15 +261,15 @@
             <div>
               <h3 class="font-bold text-base text-white flex items-center">
                 <span>Active Invoices</span>
-                <span id="invoiceCountBadge" class="ml-2 bg-slate-800 text-slate-300 text-xs px-2 py-0.5 rounded-full border border-slate-700">3</span>
+                <span id="invoiceCountBadge" class="ml-2 bg-[#10181f] text-slate-400 text-xs px-2 py-0.5 rounded-full border border-[#1a262f]">3</span>
               </h3>
-              <p class="text-xs text-slate-400">Autonomous tracking, smart reminders & dispute triage</p>
+              <p class="text-xs text-slate-500">Autonomous tracking, smart reminders & dispute triage</p>
             </div>
             <!-- Quick Filter -->
-            <div class="flex space-x-1 bg-slate-900 p-1 rounded-lg border border-slate-800 text-xs">
-              <button onclick="filterInvoices('all')" class="px-2.5 py-1 rounded bg-slate-800 text-white font-medium">All</button>
-              <button onclick="filterInvoices('overdue')" class="px-2.5 py-1 rounded hover:text-white text-slate-400">Overdue</button>
-              <button onclick="filterInvoices('pending')" class="px-2.5 py-1 rounded hover:text-white text-slate-400">Pending</button>
+            <div class="flex space-x-1 bg-[#0a0e14] p-1 rounded-lg border border-[#1a262f] text-xs">
+              <button onclick="filterInvoices('all')" class="px-2.5 py-1 rounded bg-[#10181f] text-white font-medium">All</button>
+              <button onclick="filterInvoices('overdue')" class="px-2.5 py-1 rounded hover:text-white text-slate-500">Overdue</button>
+              <button onclick="filterInvoices('pending')" class="px-2.5 py-1 rounded hover:text-white text-slate-500">Pending</button>
             </div>
           </div>
 
@@ -247,48 +283,48 @@
         <div class="lg:col-span-5 space-y-6">
 
           <!-- STANDOUT 1: Relationship-Aware Reminder Engine -->
-          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm space-y-4">
+          <div class="bg-[#0a0e14] border border-[#1a262f] rounded-2xl p-5 shadow-sm space-y-4 card-hover">
             <div class="flex items-center justify-between">
               <div class="flex items-center space-x-2">
-                <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-sm">
+                <div class="w-8 h-8 rounded-lg bg-gold-500/20 text-gold-400 flex items-center justify-center text-sm">
                   <i class="fa-solid fa-clock-rotate-left"></i>
                 </div>
                 <div>
                   <h4 class="font-bold text-sm text-white">Smart Relationship Chaser</h4>
-                  <p class="text-[11px] text-slate-400">Adapts tone & schedule to client habits</p>
+                  <p class="text-[11px] text-slate-500">Adapts tone & schedule to client habits</p>
                 </div>
               </div>
-              <span class="text-xs font-semibold px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">AI Tuned</span>
+              <span class="text-xs font-semibold px-2 py-0.5 rounded bg-gold-500/10 text-gold-400 border border-gold-500/20">AI Tuned</span>
             </div>
 
-            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800/80 space-y-2.5 text-xs">
+            <div class="bg-[#10181f] p-3.5 rounded-xl border border-[#1a262f] space-y-2.5 text-xs">
               <div class="flex items-center justify-between text-slate-300">
                 <span class="font-medium flex items-center">
                   <span class="w-2 h-2 rounded-full bg-amber-400 mr-2"></span>
                   Vanguard Systems (Overdue 4d)
                 </span>
-                <span class="text-[10px] text-slate-500">Scheduled in 2 hrs</span>
+                <span class="text-[10px] text-slate-600">Scheduled in 2 hrs</span>
               </div>
-              <p class="text-slate-400 text-[11px] italic bg-slate-900/90 p-2.5 rounded-lg border border-slate-800">
+              <p class="text-slate-400 text-[11px] italic bg-[#0a0e14] p-2.5 rounded-lg border border-[#1a262f]">
                 "Hi Sarah, just checking if you had any questions on Invoice #1029 before your Friday AP payout run? Link to one-click pay here."
               </p>
               <div class="flex items-center justify-between text-[11px]">
-                <span class="text-emerald-400"><i class="fa-solid fa-shield-check mr-1"></i> Respects AP cycle (Pays Fridays)</span>
-                <button onclick="triggerSimulatedReminder()" class="text-indigo-400 hover:text-indigo-300 underline font-medium">Send now</button>
+                <span class="text-gold-400"><i class="fa-solid fa-shield-check mr-1"></i> Respects AP cycle (Pays Fridays)</span>
+                <button onclick="triggerSimulatedReminder()" class="text-gold-400 hover:text-gold-300 underline font-medium">Send now</button>
               </div>
             </div>
 
             <!-- Escalation Stages -->
             <div class="pt-2">
-              <div class="text-[11px] font-semibold text-slate-400 mb-2">Automated Escalation Protocol</div>
+              <div class="text-[11px] font-semibold text-slate-500 mb-2">Automated Escalation Protocol</div>
               <div class="grid grid-cols-4 gap-1 text-center text-[10px]">
-                <div class="bg-slate-800/80 py-1.5 rounded border border-slate-700 text-slate-300">
-                  <div class="font-bold text-slate-400">Day -2</div>
-                  <div class="text-[9px] text-slate-500">Friendly Heads-up</div>
+                <div class="bg-[#10181f] py-1.5 rounded border border-[#1a262f] text-slate-400">
+                  <div class="font-bold text-slate-500">Day -2</div>
+                  <div class="text-[9px] text-slate-600">Friendly Heads-up</div>
                 </div>
-                <div class="bg-slate-800/80 py-1.5 rounded border border-slate-700 text-slate-300">
-                  <div class="font-bold text-slate-400">Day 0</div>
-                  <div class="text-[9px] text-slate-500">Due Today</div>
+                <div class="bg-[#10181f] py-1.5 rounded border border-[#1a262f] text-slate-400">
+                  <div class="font-bold text-slate-500">Day 0</div>
+                  <div class="text-[9px] text-slate-600">Due Today</div>
                 </div>
                 <div class="bg-amber-950/40 py-1.5 rounded border border-amber-800/50 text-amber-300">
                   <div class="font-bold">Day +4</div>
@@ -303,49 +339,49 @@
           </div>
 
           <!-- STANDOUT 2: Autonomous Open-Bank Match & Instant Cash -->
-          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm space-y-4">
+          <div class="bg-[#0a0e14] border border-[#1a262f] rounded-2xl p-5 shadow-sm space-y-4 card-hover">
             <div class="flex items-center justify-between">
               <div class="flex items-center space-x-2">
-                <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm">
+                <div class="w-8 h-8 rounded-lg bg-gold-500/20 text-gold-400 flex items-center justify-center text-sm">
                   <i class="fa-solid fa-receipt"></i>
                 </div>
                 <div>
                   <h4 class="font-bold text-sm text-white">Live Reconciliation Feed</h4>
-                  <p class="text-[11px] text-slate-400">Plaid / Stripe auto-matches direct deposits</p>
+                  <p class="text-[11px] text-slate-500">Plaid / Stripe auto-matches direct deposits</p>
                 </div>
               </div>
-              <button onclick="simulateInboundPayment()" class="text-xs bg-slate-800 hover:bg-slate-700 text-emerald-400 px-2.5 py-1 rounded-lg border border-slate-700 transition">
+              <button onclick="simulateInboundPayment()" class="text-xs bg-[#10181f] hover:bg-[#1a262f] text-gold-400 px-2.5 py-1 rounded-lg border border-[#1a262f] transition">
                 <i class="fa-solid fa-plug-circle-bolt mr-1"></i> Simulate Wire
               </button>
             </div>
 
             <div id="reconciliationLog" class="space-y-2 text-xs">
-              <div class="p-3 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between">
+              <div class="p-3 bg-[#10181f] rounded-xl border border-[#1a262f] flex items-center justify-between">
                 <div class="flex items-center space-x-3">
-                  <div class="w-7 h-7 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xs">
+                  <div class="w-7 h-7 rounded-full bg-gold-500/10 text-gold-400 flex items-center justify-center text-xs">
                     <i class="fa-solid fa-check"></i>
                   </div>
                   <div>
                     <div class="font-semibold text-white">ACH Match: Stripe Deposit</div>
-                    <div class="text-[10px] text-slate-500">Ref: WIRE-88192 • Apex Media</div>
+                    <div class="text-[10px] text-slate-600">Ref: WIRE-88192 • Apex Media</div>
                   </div>
                 </div>
                 <div class="text-right">
-                  <div class="font-bold text-emerald-400">+$3,200.00</div>
-                  <div class="text-[10px] text-slate-500">Reconciled to #1027</div>
+                  <div class="font-bold text-gold-400">+$3,200.00</div>
+                  <div class="text-[10px] text-slate-600">Reconciled to #1027</div>
                 </div>
               </div>
             </div>
 
             <!-- Instant Payout Advance Widget -->
-            <div class="p-3 bg-gradient-to-r from-emerald-950/40 to-slate-900 rounded-xl border border-emerald-800/40 flex items-center justify-between">
+            <div class="p-3 bg-gradient-to-r from-gold-900/20 to-[#0a0e14] rounded-xl border border-gold-800/30 flex items-center justify-between">
               <div>
                 <div class="text-xs font-bold text-white flex items-center">
-                  <i class="fa-solid fa-bolt text-emerald-400 mr-1.5"></i> Instant Cash Advance Available
+                  <i class="fa-solid fa-bolt text-gold-400 mr-1.5"></i> Instant Cash Advance Available
                 </div>
-                <div class="text-[11px] text-slate-400">Unlock $2,400 pending invoice cash today (1.8% fee)</div>
+                <div class="text-[11px] text-slate-500">Unlock $2,400 pending invoice cash today (1.8% fee)</div>
               </div>
-              <button onclick="alert('Instant Payout Feature: In production, funds transfer directly to your business debit card in 90 seconds via Stripe Treasury / Factoring rails.')" class="px-2.5 py-1 text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-slate-950 rounded-lg shadow transition">
+              <button onclick="alert('Instant Payout Feature: In production, funds transfer directly to your business debit card in 90 seconds via Stripe Treasury / Factoring rails.')" class="px-2.5 py-1 text-xs font-bold bg-gold-500 hover:bg-gold-400 text-black rounded-lg shadow transition gold-glow">
                 Unlock Now
               </button>
             </div>
@@ -356,8 +392,8 @@
     </div>
 
     <!-- VIEW 2: CLIENT PAYMENT PORTAL & DISPUTE RESOLUTION -->
-    <div id="viewClient" class="hidden space-y-6 max-w-3xl mx-auto">
-      <div class="bg-amber-500/10 border border-amber-500/20 text-amber-300 p-3 rounded-xl text-xs flex items-center justify-between">
+    <div id="viewClient" class="hidden space-y-6 max-w-3xl mx-auto fade-in">
+      <div class="bg-gold-500/10 border border-gold-500/20 text-gold-300 p-3 rounded-xl text-xs flex items-center justify-between">
         <div class="flex items-center">
           <i class="fa-solid fa-eye mr-2"></i>
           <span><b>Client Mode Active:</b> This is what your client sees when they click your payment link.</span>
@@ -365,22 +401,22 @@
         <button onclick="switchView('owner')" class="text-white underline font-semibold">Return to Owner view</button>
       </div>
 
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden">
+      <div class="bg-[#0a0e14] border border-[#1a262f] rounded-2xl shadow-2xl overflow-hidden">
         <!-- Invoice Header -->
-        <div class="p-6 sm:p-8 border-b border-slate-800 bg-slate-900/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div class="p-6 sm:p-8 border-b border-[#1a262f] bg-[#0a0e14]/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <div id="clientCompanyName" class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Apex Creative Studios LLC</div>
+            <div id="clientCompanyName" class="text-xs font-bold text-gold-400 uppercase tracking-wider">Apex Creative Studios LLC</div>
             <h2 id="clientInvoiceNumber" class="text-2xl font-black text-white mt-1">Invoice #1029</h2>
-            <p id="clientInvoiceDesc" class="text-xs text-slate-400">Sprint 4: Mobile App Architecture & API Spec</p>
-            <p id="clientRecipientGmail" class="text-[11px] text-slate-400 mt-1 flex items-center">
-              <i class="fa-brands fa-google text-red-400 mr-1.5"></i> Sent to Gmail: <span id="clientGmailDisplay" class="text-slate-200 font-semibold ml-1">ap@vanguardsys.com</span>
+            <p id="clientInvoiceDesc" class="text-xs text-slate-500">Sprint 4: Mobile App Architecture & API Spec</p>
+            <p id="clientRecipientGmail" class="text-[11px] text-slate-500 mt-1 flex items-center">
+              <i class="fa-brands fa-google text-red-400 mr-1.5"></i> Sent to Gmail: <span id="clientGmailDisplay" class="text-slate-300 font-semibold ml-1">ap@vanguardsys.com</span>
             </p>
           </div>
           <div class="text-left sm:text-right">
             <span id="clientStatusBadge" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">
               <span class="w-2 h-2 rounded-full bg-amber-400 mr-2"></span> Payment Due
             </span>
-            <div class="text-xs text-slate-400 mt-2">Due Date: <b class="text-white" id="clientDueDate">Sep 24, 2026</b></div>
+            <div class="text-xs text-slate-500 mt-2">Due Date: <b class="text-white" id="clientDueDate">Sep 24, 2026</b></div>
           </div>
         </div>
 
@@ -388,96 +424,96 @@
         <div class="p-6 sm:p-8 space-y-6">
           <table class="w-full text-left text-xs">
             <thead>
-              <tr class="text-slate-400 border-b border-slate-800 pb-2 uppercase tracking-wider">
+              <tr class="text-slate-500 border-b border-[#1a262f] pb-2 uppercase tracking-wider">
                 <th class="py-2">Description</th>
                 <th class="py-2 text-right">Qty / Hrs</th>
                 <th class="py-2 text-right">Rate</th>
                 <th class="py-2 text-right">Amount</th>
               </tr>
             </thead>
-            <tbody id="clientLineItems" class="divide-y divide-slate-800/60 text-slate-200">
+            <tbody id="clientLineItems" class="divide-y divide-[#1a262f] text-slate-200">
               <tr>
                 <td class="py-3 font-medium">Backend Microservice Setup</td>
-                <td class="py-3 text-right text-slate-400">1</td>
+                <td class="py-3 text-right text-slate-500">1</td>
                 <td class="py-3 text-right">$1,600.00</td>
                 <td class="py-3 text-right font-bold">$1,600.00</td>
               </tr>
               <tr>
                 <td class="py-3 font-medium">Payment Gateway & Webhook Integration</td>
-                <td class="py-3 text-right text-slate-400">1</td>
+                <td class="py-3 text-right text-slate-500">1</td>
                 <td class="py-3 text-right">$800.00</td>
                 <td class="py-3 text-right font-bold">$800.00</td>
               </tr>
             </tbody>
           </table>
 
-          <div class="border-t border-slate-800 pt-4 flex justify-end">
+          <div class="border-t border-[#1a262f] pt-4 flex justify-end">
             <div class="w-64 space-y-2 text-xs">
-              <div class="flex justify-between text-slate-400">
+              <div class="flex justify-between text-slate-500">
                 <span>Subtotal</span>
                 <span id="clientSubtotal" class="text-white font-medium">$2,400.00</span>
               </div>
-              <div class="flex justify-between text-slate-400">
+              <div class="flex justify-between text-slate-500">
                 <span>Tax (0% B2B Reverse Charge)</span>
                 <span class="text-white font-medium">$0.00</span>
               </div>
-              <div class="flex justify-between text-base font-bold text-white pt-2 border-t border-slate-800">
+              <div class="flex justify-between text-base font-bold text-white pt-2 border-t border-[#1a262f]">
                 <span>Total Due</span>
-                <span id="clientTotalDue" class="text-emerald-400 font-black text-xl">$2,400.00</span>
+                <span id="clientTotalDue" class="text-gold-400 font-black text-xl">$2,400.00</span>
               </div>
             </div>
           </div>
 
           <!-- 1-CLICK CLIENT CHECKOUT RAILS -->
-          <div id="clientPaymentArea" class="bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-4">
+          <div id="clientPaymentArea" class="bg-[#10181f] p-6 rounded-2xl border border-[#1a262f] space-y-4">
             <div class="flex items-center justify-between">
-              <span class="text-xs font-bold uppercase tracking-wider text-slate-300">Select Instant Payment Method</span>
-              <span class="text-[11px] text-slate-500"><i class="fa-solid fa-lock mr-1"></i> 256-bit Encrypted</span>
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Select Instant Payment Method</span>
+              <span class="text-[11px] text-slate-600"><i class="fa-solid fa-lock mr-1"></i> 256-bit Encrypted</span>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <button onclick="processClientPayment('ACH Transfer')" class="p-3.5 bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500 rounded-xl text-left transition group">
+              <button onclick="processClientPayment('ACH Transfer')" class="p-3.5 bg-[#0a0e14] hover:bg-[#10181f] border border-[#1a262f] hover:border-gold-500/40 rounded-xl text-left transition group">
                 <div class="flex items-center justify-between mb-1">
-                  <i class="fa-solid fa-building-columns text-emerald-400 text-base"></i>
-                  <span class="text-[10px] bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 rounded font-bold">0% fee</span>
+                  <i class="fa-solid fa-building-columns text-gold-400 text-base"></i>
+                  <span class="text-[10px] bg-gold-500/10 text-gold-400 px-1.5 py-0.5 rounded font-bold">0% fee</span>
                 </div>
-                <div class="font-bold text-xs text-white group-hover:text-emerald-400">ACH / Wire Transfer</div>
-                <div class="text-[10px] text-slate-500">Plaid 1-click login</div>
+                <div class="font-bold text-xs text-white group-hover:text-gold-400">ACH / Wire Transfer</div>
+                <div class="text-[10px] text-slate-600">Plaid 1-click login</div>
               </button>
 
-              <button onclick="processClientPayment('Apple Pay')" class="p-3.5 bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500 rounded-xl text-left transition group">
+              <button onclick="processClientPayment('Apple Pay')" class="p-3.5 bg-[#0a0e14] hover:bg-[#10181f] border border-[#1a262f] hover:border-gold-500/40 rounded-xl text-left transition group">
                 <div class="flex items-center justify-between mb-1">
                   <i class="fa-brands fa-apple text-white text-base"></i>
-                  <span class="text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded font-bold">Instant</span>
+                  <span class="text-[10px] bg-[#10181f] text-slate-500 px-1.5 py-0.5 rounded font-bold">Instant</span>
                 </div>
-                <div class="font-bold text-xs text-white group-hover:text-emerald-400">Apple Pay / Cards</div>
-                <div class="text-[10px] text-slate-500">Credit / Debit Card</div>
+                <div class="font-bold text-xs text-white group-hover:text-gold-400">Apple Pay / Cards</div>
+                <div class="text-[10px] text-slate-600">Credit / Debit Card</div>
               </button>
 
-              <button onclick="processClientPayment('Wise Multi-Currency')" class="p-3.5 bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500 rounded-xl text-left transition group">
+              <button onclick="processClientPayment('Wise Multi-Currency')" class="p-3.5 bg-[#0a0e14] hover:bg-[#10181f] border border-[#1a262f] hover:border-gold-500/40 rounded-xl text-left transition group">
                 <div class="flex items-center justify-between mb-1">
                   <i class="fa-solid fa-globe text-cyan-400 text-base"></i>
                   <span class="text-[10px] bg-cyan-500/10 text-cyan-400 px-1.5 py-0.5 rounded font-bold">Global</span>
                 </div>
-                <div class="font-bold text-xs text-white group-hover:text-emerald-400">Wise / IBAN</div>
-                <div class="text-[10px] text-slate-500">EUR, GBP, USD rails</div>
+                <div class="font-bold text-xs text-white group-hover:text-gold-400">Wise / IBAN</div>
+                <div class="text-[10px] text-slate-600">EUR, GBP, USD rails</div>
               </button>
             </div>
 
-            <button onclick="processClientPayment('Default Quick Pay')" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-3 rounded-xl shadow-lg shadow-emerald-500/20 text-sm flex items-center justify-center space-x-2 transition">
+            <button onclick="processClientPayment('Default Quick Pay')" class="w-full bg-gold-500 hover:bg-gold-400 text-black font-black py-3 rounded-xl shadow-lg shadow-gold-500/20 text-sm flex items-center justify-center space-x-2 transition gold-glow">
               <span>Authorize & Pay Full $2,400.00</span>
               <i class="fa-solid fa-arrow-right text-xs"></i>
             </button>
           </div>
 
           <!-- STANDOUT 3: INLINE DISPUTE & QUESTION RESOLUTION -->
-          <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800/80 space-y-3">
+          <div class="bg-[#10181f] p-4 rounded-xl border border-[#1a262f] space-y-3">
             <div class="flex items-center justify-between">
               <div class="flex items-center space-x-2">
-                <i class="fa-solid fa-circle-question text-slate-400 text-xs"></i>
-                <span class="text-xs font-semibold text-slate-300">Have a question or need a PO change before paying?</span>
+                <i class="fa-solid fa-circle-question text-slate-500 text-xs"></i>
+                <span class="text-xs font-semibold text-slate-400">Have a question or need a PO change before paying?</span>
               </div>
-              <span class="text-[10px] text-emerald-400">Vendor replies in ~15 mins</span>
+              <span class="text-[10px] text-gold-400">Vendor replies in ~15 mins</span>
             </div>
             
             <div class="flex gap-2">
@@ -485,16 +521,16 @@
                 id="disputeQueryInput"
                 type="text" 
                 placeholder="e.g. Please update our AP billing entity to 'Vanguard Global Corp'..." 
-                class="flex-1 bg-slate-900 border border-slate-700 focus:border-indigo-500 text-xs rounded-lg px-3 py-2 text-white placeholder-slate-500 outline-none"
+                class="flex-1 bg-[#0a0e14] border border-[#1a262f] focus:border-gold-500 text-xs rounded-lg px-3 py-2 text-white placeholder-slate-600 outline-none"
                 onkeydown="if(event.key==='Enter') submitClientDispute()"
               />
               <button 
                 onclick="submitClientDispute()" 
-                class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-2 rounded-lg text-xs font-medium border border-slate-700 transition">
+                class="bg-[#0a0e14] hover:bg-[#1a262f] text-slate-300 px-3 py-2 rounded-lg text-xs font-medium border border-[#1a262f] transition">
                 Ask Vendor
               </button>
             </div>
-            <div id="disputeNotice" class="hidden text-[11px] text-indigo-400 bg-indigo-950/30 p-2 rounded border border-indigo-800/40">
+            <div id="disputeNotice" class="hidden text-[11px] text-gold-400 bg-gold-950/30 p-2 rounded border border-gold-800/40">
               <i class="fa-solid fa-check mr-1"></i> Note sent to owner. Automatic payment reminder paused for 48 hrs while this is resolved!
             </div>
           </div>
@@ -506,17 +542,17 @@
   </main>
 
   <!-- SUCCESS MODAL FOR CLIENT PAYMENT SIMULATION -->
-  <div id="paymentSuccessModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl">
-      <div class="w-14 h-14 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-2xl">
+  <div id="paymentSuccessModal" class="hidden fixed inset-0 bg-[#020407]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-[#0a0e14] border border-[#1a262f] rounded-2xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl">
+      <div class="w-14 h-14 bg-gold-500/20 text-gold-400 rounded-full flex items-center justify-center mx-auto text-2xl">
         <i class="fa-solid fa-circle-check"></i>
       </div>
       <h3 class="text-xl font-bold text-white">Payment Completed!</h3>
-      <p class="text-xs text-slate-400">
+      <p class="text-xs text-slate-500">
         Receipt #REC-9941 has been sent to client Gmail. On the owner's side, the invoice has been <b>auto-reconciled</b> and reminders were killed instantly.
       </p>
       <div class="pt-2">
-        <button onclick="closeSuccessAndSwitch()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition">
+        <button onclick="closeSuccessAndSwitch()" class="w-full bg-gold-500 hover:bg-gold-400 text-black font-bold py-2.5 rounded-xl text-xs transition gold-glow">
           Switch Back to Owner Dashboard
         </button>
       </div>
@@ -598,7 +634,7 @@
 
       filtered.forEach(inv => {
         const card = document.createElement('div');
-        card.className = "bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-4 rounded-xl space-y-3 transition group shadow-sm";
+        card.className = "bg-[#0a0e14] border border-[#1a262f] hover:border-gold-500/30 p-4 rounded-xl space-y-3 transition group shadow-sm card-hover";
         
         let statusBadge = "";
         if (inv.status === 'overdue') {
@@ -610,7 +646,7 @@
             <i class="fa-solid fa-hourglass-half mr-1"></i> Due in ${inv.dueDate}
           </span>`;
         } else {
-          statusBadge = `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center">
+          statusBadge = `<span class="bg-gold-500/10 text-gold-400 border border-gold-500/20 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center">
             <i class="fa-solid fa-circle-check mr-1"></i> Reconciled & Paid
           </span>`;
         }
@@ -622,33 +658,33 @@
             <div>
               <div class="flex items-center space-x-2">
                 <span class="font-bold text-sm text-white">${inv.clientName}</span>
-                <span class="text-xs text-slate-500">(${inv.id})</span>
+                <span class="text-xs text-slate-600">(${inv.id})</span>
                 ${statusBadge}
               </div>
-              <div class="text-xs text-slate-400 mt-0.5">${inv.service}</div>
+              <div class="text-xs text-slate-500 mt-0.5">${inv.service}</div>
             </div>
             <div class="text-right">
               <div class="text-base font-extrabold text-white">$${inv.amount.toLocaleString()}</div>
-              <div class="text-[10px] text-slate-500 flex items-center justify-end gap-1 mt-0.5">
+              <div class="text-[10px] text-slate-600 flex items-center justify-end gap-1 mt-0.5">
                 <i class="fa-brands fa-google text-red-400"></i> ${displayGmail}
               </div>
             </div>
           </div>
 
-          <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 flex items-center justify-between text-xs">
-            <div class="flex items-center space-x-2 text-slate-400 text-[11px] truncate mr-2">
-              <i class="fa-solid fa-robot text-emerald-400"></i>
+          <div class="bg-[#10181f] p-2.5 rounded-lg border border-[#1a262f] flex items-center justify-between text-xs">
+            <div class="flex items-center space-x-2 text-slate-500 text-[11px] truncate mr-2">
+              <i class="fa-solid fa-robot text-gold-400"></i>
               <span>${inv.reminderStatus}</span>
             </div>
             <div class="flex items-center space-x-1.5 flex-wrap justify-end gap-1">
-              <button onclick="sendRealEmailModal('${inv.id}')" class="px-2.5 py-1 text-[11px] font-semibold bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 rounded-md border border-emerald-500/40 transition flex items-center gap-1">
+              <button onclick="sendRealEmailModal('${inv.id}')" class="px-2.5 py-1 text-[11px] font-semibold bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 rounded-md border border-gold-500/40 transition flex items-center gap-1">
                 <i class="fa-brands fa-google text-[10px] text-red-400"></i> Send to Gmail
               </button>
-              <button onclick="previewAsClient('${inv.id}')" class="px-2.5 py-1 text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-md border border-slate-700 transition">
+              <button onclick="previewAsClient('${inv.id}')" class="px-2.5 py-1 text-[11px] font-semibold bg-[#10181f] hover:bg-[#1a262f] text-slate-400 rounded-md border border-[#1a262f] transition">
                 <i class="fa-solid fa-arrow-up-right-from-square mr-1"></i> Pay Link
               </button>
               ${inv.status !== 'paid' ? `
-                <button onclick="markManualPaid('${inv.id}')" class="px-2.5 py-1 text-[11px] font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 rounded-md border border-emerald-500/30 transition">
+                <button onclick="markManualPaid('${inv.id}')" class="px-2.5 py-1 text-[11px] font-semibold bg-gold-500/10 hover:bg-gold-500/20 text-gold-400 rounded-md border border-gold-500/30 transition">
                   Mark Paid
                 </button>
               ` : ''}
@@ -685,7 +721,6 @@
         if (apiData.success) {
           return { success: true, method: `Resend (${apiData.provider || 'Verified Relay'})` };
         } else {
-          // Real error from Resend — show it to the user
           const errMsg = apiData.error || apiData.message || 'Unknown error from email provider';
           return { success: false, method: 'Failed', error: errMsg };
         }
@@ -694,17 +729,14 @@
       }
     }
 
-
     function sendRealEmailModal(invoiceId) {
       const inv = invoices.find(i => i.id === invoiceId);
       if (!inv) return;
-      // Prompt for Gmail if not already set
       const targetGmail = prompt(`Send bill directly to client Gmail:\nSubject: "pay me the bill"\nMatter: $${inv.amount.toLocaleString()} due by ${inv.dueDate}`, inv.clientGmail || "");
       if (!targetGmail || !targetGmail.trim()) return;
 
       inv.clientGmail = targetGmail.trim();
 
-      // Dispatch email via serverless API
       sendEmailNotification(inv.clientGmail, inv.amount, inv.dueDate, inv.clientName, inv.id, inv.service)
         .then(result => {
           inv.reminderStatus = `Email dispatched via ${result.method}`;
@@ -712,7 +744,7 @@
 
           const feedback = document.getElementById('draftFeedback');
           const feedbackText = document.getElementById('draftFeedbackText');
-          feedback.className = "mt-3 p-3.5 rounded-xl bg-emerald-950/90 border border-emerald-600 text-xs text-emerald-200";
+          feedback.className = "mt-3 p-3.5 rounded-xl bg-gold-900/40 border border-gold-600 text-xs text-gold-200";
           feedbackText.innerHTML = `✅ Email sent to ${inv.clientGmail} via ${result.method}`;
           feedback.classList.remove('hidden');
           setTimeout(() => feedback.classList.add('hidden'), 8000);
@@ -736,7 +768,6 @@
       const sendBtn = document.getElementById('generateSendBtn');
       const btnText = document.getElementById('sendBtnText');
 
-      // Validation for all 4 details + Gmail
       if (!companyName || !amountRaw || !deadline || !products || !clientGmail) {
         feedback.className = "mt-3 p-3.5 rounded-xl bg-red-950/80 border border-red-700 text-xs text-red-200 flex items-center justify-between shadow-lg";
         feedbackText.innerHTML = `
@@ -754,7 +785,7 @@
         feedbackText.innerHTML = `
           <div class="flex items-center gap-2">
             <i class="fa-solid fa-circle-exclamation text-red-400 text-base"></i>
-            <span>Please enter a valid Gmail address (e.g. <b>plavanya3344@gmail.com</b>).</span>
+            <span>Please enter a valid Gmail address (e.g. <b>client@gmail.com</b>).</span>
           </div>
         `;
         feedback.classList.remove('hidden');
@@ -764,7 +795,6 @@
       const amount = parseFloat(amountRaw.replace(/[^0-9.]/g, '')) || 0;
       const newId = "INV-" + (1030 + invoices.length);
 
-      // Parse products into neat, clean invoice line items
       const productLines = products.split(/[,;\n]+/).map(p => p.trim()).filter(Boolean);
       let items = [];
       if (productLines.length > 1) {
@@ -775,79 +805,10 @@
           rate: (idx === productLines.length - 1) ? (amount - splitRate * (productLines.length - 1)) : splitRate
         }));
       } else {
-        items = [
-          { desc: products, qty: 1, rate: amount }
-        ];
+        items = [{ desc: products, qty: 1, rate: amount }];
       }
 
-      // Prepare clean invoice object
-       const newInvoice = {
-         id: newId,
-         clientName: companyName,
-         clientGmail: clientGmail,
-         service: products,
-         amount: amount,
-         status: "pending",
-         daysOverdue: 0,
-         dueDate: deadline,
-         opensCount: 1,
-         // reminderStatus will be set after email dispatch
-         items: items
-       };
-
-       // Add to invoices list
-       invoices.unshift(newInvoice);
-       renderInvoices();
-
-       // Update client view data so the user can immediately view their neat clean invoice
-       activeInvoiceForClient = newInvoice;
-       loadClientViewData(newInvoice);
-
-       btnText.innerText = "Dispatching email...";
-       sendBtn.disabled = true;
-
-       // Dispatch email via serverless API
-       const dispatchResult = await sendEmailNotification(clientGmail, amount, deadline, companyName, newId, products);
-
-       // Update reminder status on the invoice
-       newInvoice.reminderStatus = `Email dispatched via ${dispatchResult.method}`;
-       renderInvoices();
-
-       btnText.innerText = "Generate Invoice & Send";
-       sendBtn.disabled = false;
-
-       // Clear input fields
-       document.getElementById('companyNameInput').value = '';
-       document.getElementById('billAmountInput').value = '';
-       document.getElementById('deadLineInput').value = '';
-       document.getElementById('productsInput').value = '';
-       document.getElementById('clientGmailInput').value = '';
-
-       // Show success feedback without Gmail link
-       feedback.className = "mt-3 p-4 rounded-xl bg-emerald-950/90 border border-emerald-600 text-xs text-emerald-200 space-y-2 shadow-2xl";
-       feedbackText.innerHTML = `
-         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-           <div class="space-y-1">
-             <div class="font-bold text-sm text-white flex items-center gap-1.5">
-               <i class="fa-solid fa-circle-check text-emerald-400"></i> Neat Clean Invoice ${newId} Generated & Dispatched!
-             </div>
-             <div class="text-slate-300">
-               Recipient: <b class="text-white">${clientGmail}</b>
-             </div>
-             <div class="text-slate-400 text-[11px]">
-               Bill Amount: <b>$${amount.toLocaleString()}</b> • Deadline: <b>${deadline}</b> • Products: <i>${products}</i>
-             </div>
-           </div>
-         </div>
-         <div class="pt-2 flex flex-wrap items-center gap-2 border-t border-emerald-800/60">
-           <button onclick=\"switchView('client')\" class=\"inline-flex items-center px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg font-bold text-xs border border-slate-700 transition\">
-             <i class=\"fa-solid fa-receipt mr-1.5 text-emerald-400\"></i> View Neat Clean Invoice
-           </button>
-           <span class=\"text-[10px] text-emerald-400\">(${dispatchResult.method})</span>
-         </div>
-       `;
-       feedback.classList.remove('hidden');
-      // Duplicate original block removed
+      const newInvoice = {
         id: newId,
         clientName: companyName,
         clientGmail: clientGmail,
@@ -857,73 +818,55 @@
         daysOverdue: 0,
         dueDate: deadline,
         opensCount: 1,
-        reminderStatus: `Direct Gmail dispatched to ${clientGmail} ("pay me the bill")`,
         items: items
       };
 
-      // Add to invoices list
       invoices.unshift(newInvoice);
       renderInvoices();
 
-      // Update client view data so the user can immediately view their neat clean invoice
       activeInvoiceForClient = newInvoice;
       loadClientViewData(newInvoice);
 
-      btnText.innerText = "Dispatching to Gmail...";
+      btnText.innerText = "Dispatching email...";
       sendBtn.disabled = true;
 
-      // Dispatch to Gmail in background
       const dispatchResult = await sendEmailNotification(clientGmail, amount, deadline, companyName, newId, products);
 
-      btnText.innerText = "Generate Invoice & Send to Gmail";
+      newInvoice.reminderStatus = `Email dispatched via ${dispatchResult.method}`;
+      renderInvoices();
+
+      btnText.innerText = "Generate Invoice & Send";
       sendBtn.disabled = false;
 
-      // Clear input fields
       document.getElementById('companyNameInput').value = '';
       document.getElementById('billAmountInput').value = '';
       document.getElementById('deadLineInput').value = '';
       document.getElementById('productsInput').value = '';
       document.getElementById('clientGmailInput').value = '';
 
-      // Construct direct Gmail Web compose link
-      const subject = "pay me the bill";
-      const matter = `Hello ${companyName},\n\nThis is your official invoice for:\n- Products / Services Took: ${products}\n\nBill Amount Due: $${amount.toLocaleString()}\nDeadline to Pay Off: ${deadline}\n\nInvoice Reference: ${newId}\nStatus: Payment Due\n\nPlease settle this bill before the specified deadline.\n\nThank you,\nFlowLedger Autonomous Invoicing`;
-      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(clientGmail)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(matter)}`;
-
-      // Show comprehensive success card with direct links
-      feedback.className = "mt-3 p-4 rounded-xl bg-emerald-950/90 border border-emerald-600 text-xs text-emerald-200 space-y-2 shadow-2xl";
+      feedback.className = "mt-3 p-4 rounded-xl bg-gold-900/40 border border-gold-600 text-xs text-gold-200 space-y-2 shadow-2xl";
       feedbackText.innerHTML = `
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div class="space-y-1">
             <div class="font-bold text-sm text-white flex items-center gap-1.5">
-              <i class="fa-solid fa-circle-check text-emerald-400"></i> Neat Clean Invoice ${newId} Generated &amp; Dispatched!
+              <i class="fa-solid fa-circle-check text-gold-400"></i> Invoice ${newId} Generated & Dispatched!
             </div>
             <div class="text-slate-300">
-              Recipient: <b class="text-white">${clientGmail}</b> &bull; Subject: <code class="bg-slate-900 text-emerald-300 px-1 py-0.5 rounded border border-slate-800">"${subject}"</code>
+              Recipient: <b class="text-white">${clientGmail}</b>
             </div>
             <div class="text-slate-400 text-[11px]">
-              Matter: Bill Amount: <b>$${amount.toLocaleString()}</b> &bull; Deadline: <b>${deadline}</b> &bull; Products Took: <i>${products}</i>
+              Bill Amount: <b>$${amount.toLocaleString()}</b> • Deadline: <b>${deadline}</b> • Products: <i>${products}</i>
             </div>
           </div>
         </div>
-        <div class="pt-2 flex flex-wrap items-center gap-2 border-t border-emerald-800/60">
-          <a href="${gmailUrl}" target="_blank" class="inline-flex items-center px-3.5 py-1.5 bg-red-600 hover:bg-red-500 text-white rounded-lg font-bold text-xs shadow-lg transition">
-            <i class="fa-brands fa-google mr-1.5"></i> Open in Gmail &amp; Send Now
-          </a>
-          <button onclick="switchView('client')" class="inline-flex items-center px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg font-bold text-xs border border-slate-700 transition">
-            <i class="fa-solid fa-receipt mr-1.5 text-emerald-400"></i> View Neat Clean Invoice
+        <div class="pt-2 flex flex-wrap items-center gap-2 border-t border-gold-800/60">
+          <button onclick="switchView('client')" class="inline-flex items-center px-3.5 py-1.5 bg-[#10181f] hover:bg-[#1a262f] text-slate-200 rounded-lg font-bold text-xs border border-[#1a262f] transition">
+            <i class="fa-solid fa-receipt mr-1.5 text-gold-400"></i> View Clean Invoice
           </button>
-          <span class="text-[10px] text-emerald-400">(${dispatchResult.method})</span>
+          <span class="text-[10px] text-gold-400">(${dispatchResult.method})</span>
         </div>
       `;
       feedback.classList.remove('hidden');
-
-      // Auto launch Gmail compose window in a new tab
-      try {
-        window.open(gmailUrl, '_blank');
-      } catch (err) {
-        console.warn("Popup blocked by browser; direct button provided in banner", err);
-      }
     }
 
     function previewAsClient(invoiceId) {
@@ -952,7 +895,7 @@
         const row = document.createElement('tr');
         row.innerHTML = `
           <td class="py-3 font-medium">${item.desc}</td>
-          <td class="py-3 text-right text-slate-400">${item.qty}</td>
+          <td class="py-3 text-right text-slate-500">${item.qty}</td>
           <td class="py-3 text-right">$${item.rate.toLocaleString()}.00</td>
           <td class="py-3 text-right font-bold">$${(item.qty * item.rate).toLocaleString()}.00</td>
         `;
@@ -962,8 +905,8 @@
       const badge = document.getElementById('clientStatusBadge');
       const payArea = document.getElementById('clientPaymentArea');
       if (inv.status === 'paid') {
-        badge.className = "inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
-        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 mr-2"></span> Paid & Reconciled`;
+        badge.className = "inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-gold-500/10 text-gold-400 border border-gold-500/20";
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-gold-400 mr-2"></span> Paid & Reconciled`;
         payArea.classList.add('hidden');
       } else {
         badge.className = "inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20";
@@ -981,13 +924,13 @@
       if (view === 'owner') {
         ownerEl.classList.remove('hidden');
         clientEl.classList.add('hidden');
-        tabOwner.className = "px-4 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500 text-slate-950 shadow transition-all";
-        tabClient.className = "px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all";
+        tabOwner.className = "px-4 py-1.5 rounded-lg text-xs font-semibold bg-gold-500 text-black shadow transition-all";
+        tabClient.className = "px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-white transition-all";
       } else {
         ownerEl.classList.add('hidden');
         clientEl.classList.remove('hidden');
-        tabClient.className = "px-4 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500 text-slate-950 shadow transition-all";
-        tabOwner.className = "px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all";
+        tabClient.className = "px-4 py-1.5 rounded-lg text-xs font-semibold bg-gold-500 text-black shadow transition-all";
+        tabOwner.className = "px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-white transition-all";
         if (activeInvoiceForClient) loadClientViewData(activeInvoiceForClient);
       }
     }
@@ -999,20 +942,20 @@
       
       const recContainer = document.getElementById('reconciliationLog');
       const newEntry = document.createElement('div');
-      newEntry.className = "p-3 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between";
+      newEntry.className = "p-3 bg-[#10181f] rounded-xl border border-[#1a262f] flex items-center justify-between";
       newEntry.innerHTML = `
         <div class="flex items-center space-x-3">
-          <div class="w-7 h-7 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xs">
+          <div class="w-7 h-7 rounded-full bg-gold-500/10 text-gold-400 flex items-center justify-center text-xs">
             <i class="fa-solid fa-check"></i>
           </div>
           <div>
             <div class="font-semibold text-white">Direct Settle: ${method}</div>
-            <div class="text-[10px] text-slate-500">${activeInvoiceForClient.clientName} • Just now</div>
+            <div class="text-[10px] text-slate-600">${activeInvoiceForClient.clientName} • Just now</div>
           </div>
         </div>
         <div class="text-right">
-          <div class="font-bold text-emerald-400">+$${activeInvoiceForClient.amount.toLocaleString()}.00</div>
-          <div class="text-[10px] text-slate-500">Auto-closed ${activeInvoiceForClient.id}</div>
+          <div class="font-bold text-gold-400">+$${activeInvoiceForClient.amount.toLocaleString()}.00</div>
+          <div class="text-[10px] text-slate-600">Auto-closed ${activeInvoiceForClient.id}</div>
         </div>
       `;
       recContainer.prepend(newEntry);
@@ -1056,20 +999,20 @@
       
       const recContainer = document.getElementById('reconciliationLog');
       const newEntry = document.createElement('div');
-      newEntry.className = "p-3 bg-slate-950 rounded-xl border border-emerald-700/50 flex items-center justify-between";
+      newEntry.className = "p-3 bg-[#10181f] rounded-xl border border-gold-700/30 flex items-center justify-between";
       newEntry.innerHTML = `
         <div class="flex items-center space-x-3">
-          <div class="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs">
+          <div class="w-7 h-7 rounded-full bg-gold-500/20 text-gold-400 flex items-center justify-center text-xs">
             <i class="fa-solid fa-building-columns"></i>
           </div>
           <div>
             <div class="font-semibold text-white">Bank Feed Auto-Match (Plaid)</div>
-            <div class="text-[10px] text-slate-400">Wire deposit from ${overdueInv.clientName}</div>
+            <div class="text-[10px] text-slate-500">Wire deposit from ${overdueInv.clientName}</div>
           </div>
         </div>
         <div class="text-right">
-          <div class="font-bold text-emerald-400">+$${overdueInv.amount.toLocaleString()}.00</div>
-          <div class="text-[10px] text-emerald-300">Auto-reconciled ${overdueInv.id}</div>
+          <div class="font-bold text-gold-400">+$${overdueInv.amount.toLocaleString()}.00</div>
+          <div class="text-[10px] text-gold-300">Auto-reconciled ${overdueInv.id}</div>
         </div>
       `;
       recContainer.prepend(newEntry);
@@ -1080,27 +1023,28 @@
   </script>
 
   <!-- Complete Site Footer -->
-  <footer class="border-t border-slate-800 py-10 bg-slate-950 text-xs text-slate-500 mt-16">
+  <footer class="border-t border-[#1a262f] py-10 bg-[#020407] text-xs text-slate-600 mt-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
       <div class="flex items-center space-x-3">
-        <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+        <div class="w-8 h-8 rounded-lg bg-gold-500/20 text-gold-400 flex items-center justify-center font-bold">
           <i class="fa-solid fa-bolt-lightning text-xs"></i>
         </div>
         <div>
           <span class="font-bold text-white text-sm">FlowLedger AI</span>
-          <p class="text-[11px] text-slate-400">Autonomous Receivables &amp; Invoicing Platform for Micro-SMEs</p>
+          <p class="text-[11px] text-slate-500">Autonomous Receivables &amp; Invoicing Platform for Micro-SMEs</p>
         </div>
       </div>
       <div class="flex flex-wrap items-center gap-6 text-xs font-semibold">
-        <a href="index.html" class="hover:text-emerald-400 transition">App Cockpit</a>
-        <a href="pricing.html" class="hover:text-emerald-400 transition">Pricing &amp; Plans</a>
-        <a href="presentation.html" class="hover:text-emerald-400 transition">Pitch Deck (16:9)</a>
-        <a href="docs.html" class="hover:text-emerald-400 transition">Architecture Docs</a>
+        <a href="index.html" class="hover:text-gold-400 transition">App Cockpit</a>
+        <a href="pricing.html" class="hover:text-gold-400 transition">Pricing &amp; Plans</a>
+        <a href="presentation.html" class="hover:text-gold-400 transition">Pitch Deck (16:9)</a>
+        <a href="docs.html" class="hover:text-gold-400 transition">Architecture Docs</a>
       </div>
-      <div class="text-[11px] text-slate-500">
+      <div class="text-[11px] text-slate-600">
         &copy; 2026 FlowLedger Inc. Production Ready.
       </div>
     </div>
   </footer>
+
 </body>
 </html>
