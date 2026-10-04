@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FlowLedger | Autonomous Invoice-to-Cash Assistant</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              900: '#14532d',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .badge-pulse {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .4; }
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-emerald-500 selection:text-slate-950">
+
+  <!-- TOP APP NAV -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-slate-950 font-extrabold shadow-lg shadow-emerald-500/20 text-lg">
+          <i class="fa-solid fa-bolt-lightning"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="font-bold text-lg tracking-tight text-white">FlowLedger</span>
+            <span class="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded-full font-semibold border border-emerald-500/20">Autopilot Active</span>
+          </div>
+          <p class="text-xs text-slate-400">Zero-Friction Invoice-to-Cash Assistant</p>
+        </div>
+      </div>
+
+      <!-- Quick Metrics Pill -->
+      <div class="hidden md:flex items-center space-x-6 text-xs bg-slate-800/80 px-4 py-2 rounded-full border border-slate-700/60">
+        <div>
+          <span class="text-slate-400">Uncollected:</span>
+          <span id="headerOutstanding" class="font-bold text-amber-400 ml-1">$4,850</span>
+        </div>
+        <div class="h-3 w-px bg-slate-700"></div>
+        <div>
+          <span class="text-slate-400">Collected this month:</span>
+          <span id="headerCollected" class="font-bold text-emerald-400 ml-1">$12,400</span>
+        </div>
+        <div class="h-3 w-px bg-slate-700"></div>
+        <div class="flex items-center text-emerald-400">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 mr-1.5 badge-pulse"></span>
+          Bank Feed Synced
+        </div>
+      </div>
+
+      <!-- View Switcher Tabs -->
+      <div class="flex bg-slate-800 p-1 rounded-xl border border-slate-700">
+        <button id="tabOwnerBtn" onclick="switchView('owner')" class="px-4 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500 text-slate-950 shadow transition-all">
+          <i class="fa-solid fa-user-tie mr-1.5"></i> SME Owner View
+        </button>
+        <button id="tabClientBtn" onclick="switchView('client')" class="px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all">
+          <i class="fa-solid fa-credit-card mr-1.5"></i> Client Payment Portal
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN WRAPPER -->
+  <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-8">
+
+    <!-- VIEW 1: SME OWNER ASSISTANT COCKPIT -->
+    <div id="viewOwner" class="space-y-6">
+
+      <!-- AI ASSISTANT HERO BAR: NLP DRAFTING -->
+      <div class="relative overflow-hidden bg-gradient-to-r from-slate-900 via-slate-900 to-emerald-950/40 border border-slate-800 rounded-2xl p-5 shadow-2xl">
+        <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="flex items-center space-x-2">
+              <span class="text-xs uppercase tracking-wider font-extrabold text-emerald-400 flex items-center">
+                <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> Conversational Billing Assistant
+              </span>
+              <span class="text-slate-500 text-xs">• No complex forms needed</span>
+            </div>
+            <h2 class="text-xl font-bold text-white tracking-tight">Tell FlowLedger what work you finished</h2>
+            <p class="text-xs text-slate-400">Type naturally or paste from WhatsApp/Slack: e.g. <i>"Bill Acme Corp $1,500 for Brand Identity overhaul, net 7 days"</i></p>
+          </div>
+
+          <!-- Fast Preset Badges -->
+          <div class="flex flex-wrap gap-2 text-xs">
+            <button onclick="applyPrompt('Bill Nexus Labs $2,200 for 15 hours React refactor due in 14 days')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 transition">
+              ⚡ "+ Nexus Labs $2,200 dev"
+            </button>
+            <button onclick="applyPrompt('Invoice Peak Studio $3,500 for Monthly Social Media Retainer')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 transition">
+              ⚡ "+ Peak Studio $3,500 retainer"
+            </button>
+          </div>
+        </div>
+
+        <!-- Chat Prompt Input -->
+        <div class="mt-4 flex flex-col sm:flex-row gap-2">
+          <div class="relative flex-1">
+            <i class="fa-solid fa-comment-dots absolute left-3.5 top-3.5 text-slate-500"></i>
+            <input 
+              id="promptInput"
+              type="text" 
+              placeholder="e.g. Bill Orbit Media $2,400 for Q3 UI/UX Sprint with 10% advance paid..." 
+              class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition"
+              onkeydown="if(event.key==='Enter') parseAndDraftPrompt()"
+            />
+          </div>
+          <button 
+            onclick="parseAndDraftPrompt()"
+            class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-6 py-2.5 rounded-xl text-sm flex items-center justify-center space-x-2 shadow-lg shadow-emerald-500/20 transition active:scale-95 whitespace-nowrap">
+            <span>Generate & Send</span>
+            <i class="fa-solid fa-paper-plane text-xs"></i>
+          </button>
+        </div>
+
+        <!-- Notification banner after drafting -->
+        <div id="draftFeedback" class="hidden mt-3 p-2.5 rounded-lg bg-emerald-950/60 border border-emerald-800 text-xs text-emerald-300 flex items-center justify-between">
+          <span id="draftFeedbackText"></span>
+          <button onclick="this.parentElement.classList.add('hidden')" class="text-emerald-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>
+
+      <!-- 3 PILLARS DASHBOARD GRID -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- Active Receivables Board (7 cols) -->
+        <div class="lg:col-span-7 space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-bold text-base text-white flex items-center">
+                <span>Active Invoices</span>
+                <span id="invoiceCountBadge" class="ml-2 bg-slate-800 text-slate-300 text-xs px-2 py-0.5 rounded-full border border-slate-700">3</span>
+              </h3>
+              <p class="text-xs text-slate-400">Autonomous tracking, smart reminders & dispute triage</p>
+            </div>
+            <!-- Quick Filter -->
+            <div class="flex space-x-1 bg-slate-900 p-1 rounded-lg border border-slate-800 text-xs">
+              <button onclick="filterInvoices('all')" class="px-2.5 py-1 rounded bg-slate-800 text-white font-medium">All</button>
+              <button onclick="filterInvoices('overdue')" class="px-2.5 py-1 rounded hover:text-white text-slate-400">Overdue</button>
+              <button onclick="filterInvoices('pending')" class="px-2.5 py-1 rounded hover:text-white text-slate-400">Pending</button>
+            </div>
+          </div>
+
+          <!-- Invoices Cards Container -->
+          <div id="invoicesList" class="space-y-3">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+
+        <!-- Autopilot Engine & Intelligence (5 cols) -->
+        <div class="lg:col-span-5 space-y-6">
+
+          <!-- STANDOUT 1: Relationship-Aware Reminder Engine -->
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm space-y-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-sm">
+                  <i class="fa-solid fa-clock-rotate-left"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-sm text-white">Smart Relationship Chaser</h4>
+                  <p class="text-[11px] text-slate-400">Adapts tone & schedule to client habits</p>
+                </div>
+              </div>
+              <span class="text-xs font-semibold px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">AI Tuned</span>
+            </div>
+
+            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800/80 space-y-2.5 text-xs">
+              <div class="flex items-center justify-between text-slate-300">
+                <span class="font-medium flex items-center">
+                  <span class="w-2 h-2 rounded-full bg-amber-400 mr-2"></span>
+                  Vanguard Systems (Overdue 4d)
+                </span>
+                <span class="text-[10px] text-slate-500">Scheduled in 2 hrs</span>
+              </div>
+              <p class="text-slate-400 text-[11px] italic bg-slate-900/90 p-2.5 rounded-lg border border-slate-800">
+                "Hi Sarah, just checking if you had any questions on Invoice #1029 before your Friday AP payout run? Link to one-click pay here."
+              </p>
+              <div class="flex items-center justify-between text-[11px]">
+                <span class="text-emerald-400"><i class="fa-solid fa-shield-check mr-1"></i> Respects AP cycle (Pays Fridays)</span>
+                <button onclick="triggerSimulatedReminder()" class="text-indigo-400 hover:text-indigo-300 underline font-medium">Send now</button>
+              </div>
+            </div>
+
+            <!-- Escalation Stages -->
+            <div class="pt-2">
+              <div class="text-[11px] font-semibold text-slate-400 mb-2">Automated Escalation Protocol</div>
+              <div class="grid grid-cols-4 gap-1 text-center text-[10px]">
+                <div class="bg-slate-800/80 py-1.5 rounded border border-slate-700 text-slate-300">
+                  <div class="font-bold text-slate-400">Day -2</div>
+                  <div class="text-[9px] text-slate-500">Friendly Heads-up</div>
+                </div>
+                <div class="bg-slate-800/80 py-1.5 rounded border border-slate-700 text-slate-300">
+                  <div class="font-bold text-slate-400">Day 0</div>
+                  <div class="text-[9px] text-slate-500">Due Today</div>
+                </div>
+                <div class="bg-amber-950/40 py-1.5 rounded border border-amber-800/50 text-amber-300">
+                  <div class="font-bold">Day +4</div>
+                  <div class="text-[9px] text-amber-400">Inquiry & AP Check</div>
+                </div>
+                <div class="bg-red-950/40 py-1.5 rounded border border-red-800/50 text-red-300">
+                  <div class="font-bold">Day +10</div>
+                  <div class="text-[9px] text-red-400">Director Notice</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- STANDOUT 2: Autonomous Open-Bank Match & Instant Cash -->
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm space-y-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm">
+                  <i class="fa-solid fa-receipt"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-sm text-white">Live Reconciliation Feed</h4>
+                  <p class="text-[11px] text-slate-400">Plaid / Stripe auto-matches direct deposits</p>
+                </div>
+              </div>
+              <button onclick="simulateInboundPayment()" class="text-xs bg-slate-800 hover:bg-slate-700 text-emerald-400 px-2.5 py-1 rounded-lg border border-slate-700 transition">
+                <i class="fa-solid fa-plug-circle-bolt mr-1"></i> Simulate Wire
+              </button>
+            </div>
+
+            <div id="reconciliationLog" class="space-y-2 text-xs">
+              <div class="p-3 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                  <div class="w-7 h-7 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xs">
+                    <i class="fa-solid fa-check"></i>
+                  </div>
+                  <div>
+                    <div class="font-semibold text-white">ACH Match: Stripe Deposit</div>
+                    <div class="text-[10px] text-slate-500">Ref: WIRE-88192 • Apex Media</div>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="font-bold text-emerald-400">+$3,200.00</div>
+                  <div class="text-[10px] text-slate-500">Reconciled to #1027</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Instant Payout Advance Widget -->
+            <div class="p-3 bg-gradient-to-r from-emerald-950/40 to-slate-900 rounded-xl border border-emerald-800/40 flex items-center justify-between">
+              <div>
+                <div class="text-xs font-bold text-white flex items-center">
+                  <i class="fa-solid fa-bolt text-emerald-400 mr-1.5"></i> Instant Cash Advance Available
+                </div>
+                <div class="text-[11px] text-slate-400">Unlock $2,400 pending invoice cash today (1.8% fee)</div>
+              </div>
+              <button onclick="alert('Instant Payout Feature: In production, funds transfer directly to your business debit card in 90 seconds via Stripe Treasury / Factoring rails.')" class="px-2.5 py-1 text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-slate-950 rounded-lg shadow transition">
+                Unlock Now
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 2: CLIENT PAYMENT PORTAL & DISPUTE RESOLUTION -->
+    <div id="viewClient" class="hidden space-y-6 max-w-3xl mx-auto">
+      <div class="bg-amber-500/10 border border-amber-500/20 text-amber-300 p-3 rounded-xl text-xs flex items-center justify-between">
+        <div class="flex items-center">
+          <i class="fa-solid fa-eye mr-2"></i>
+          <span><b>Client Mode Active:</b> This is what your client sees when they click your payment link.</span>
+        </div>
+        <button onclick="switchView('owner')" class="text-white underline font-semibold">Return to Owner view</button>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden">
+        <!-- Invoice Header -->
+        <div class="p-6 sm:p-8 border-b border-slate-800 bg-slate-900/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <div class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Apex Creative Studios LLC</div>
+            <h2 id="clientInvoiceNumber" class="text-2xl font-black text-white mt-1">Invoice #1029</h2>
+            <p id="clientInvoiceDesc" class="text-xs text-slate-400">Sprint 4: Mobile App Architecture & API Spec</p>
+          </div>
+          <div class="text-left sm:text-right">
+            <span id="clientStatusBadge" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+              <span class="w-2 h-2 rounded-full bg-amber-400 mr-2"></span> Payment Due
+            </span>
+            <div class="text-xs text-slate-400 mt-2">Due Date: <b class="text-white" id="clientDueDate">Sep 24, 2026</b></div>
+          </div>
+        </div>
+
+        <!-- Invoice Breakdown Table -->
+        <div class="p-6 sm:p-8 space-y-6">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="text-slate-400 border-b border-slate-800 pb-2 uppercase tracking-wider">
+                <th class="py-2">Description</th>
+                <th class="py-2 text-right">Qty / Hrs</th>
+                <th class="py-2 text-right">Rate</th>
+                <th class="py-2 text-right">Amount</th>
+              </tr>
+            </thead>
+            <tbody id="clientLineItems" class="divide-y divide-slate-800/60 text-slate-200">
+              <tr>
+                <td class="py-3 font-medium">Backend Microservice Setup</td>
+                <td class="py-3 text-right text-slate-400">1</td>
+                <td class="py-3 text-right">$1,600.00</td>
+                <td class="py-3 text-right font-bold">$1,600.00</td>
+              </tr>
+              <tr>
+                <td class="py-3 font-medium">Payment Gateway & Webhook Integration</td>
+                <td class="py-3 text-right text-slate-400">1</td>
+                <td class="py-3 text-right">$800.00</td>
+                <td class="py-3 text-right font-bold">$800.00</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="border-t border-slate-800 pt-4 flex justify-end">
+            <div class="w-64 space-y-2 text-xs">
+              <div class="flex justify-between text-slate-400">
+                <span>Subtotal</span>
+                <span id="clientSubtotal" class="text-white font-medium">$2,400.00</span>
+              </div>
+              <div class="flex justify-between text-slate-400">
+                <span>Tax (0% B2B Reverse Charge)</span>
+                <span class="text-white font-medium">$0.00</span>
+              </div>
+              <div class="flex justify-between text-base font-bold text-white pt-2 border-t border-slate-800">
+                <span>Total Due</span>
+                <span id="clientTotalDue" class="text-emerald-400 font-black text-xl">$2,400.00</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1-CLICK CLIENT CHECKOUT RAILS -->
+          <div id="clientPaymentArea" class="bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-300">Select Instant Payment Method</span>
+              <span class="text-[11px] text-slate-500"><i class="fa-solid fa-lock mr-1"></i> 256-bit Encrypted</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <button onclick="processClientPayment('ACH Transfer')" class="p-3.5 bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500 rounded-xl text-left transition group">
+                <div class="flex items-center justify-between mb-1">
+                  <i class="fa-solid fa-building-columns text-emerald-400 text-base"></i>
+                  <span class="text-[10px] bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 rounded font-bold">0% fee</span>
+                </div>
+                <div class="font-bold text-xs text-white group-hover:text-emerald-400">ACH / Wire Transfer</div>
+                <div class="text-[10px] text-slate-500">Plaid 1-click login</div>
+              </button>
+
+              <button onclick="processClientPayment('Apple Pay')" class="p-3.5 bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500 rounded-xl text-left transition group">
+                <div class="flex items-center justify-between mb-1">
+                  <i class="fa-brands fa-apple text-white text-base"></i>
+                  <span class="text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded font-bold">Instant</span>
+                </div>
+                <div class="font-bold text-xs text-white group-hover:text-emerald-400">Apple Pay / Cards</div>
+                <div class="text-[10px] text-slate-500">Credit / Debit Card</div>
+              </button>
+
+              <button onclick="processClientPayment('Wise Multi-Currency')" class="p-3.5 bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500 rounded-xl text-left transition group">
+                <div class="flex items-center justify-between mb-1">
+                  <i class="fa-solid fa-globe text-cyan-400 text-base"></i>
+                  <span class="text-[10px] bg-cyan-500/10 text-cyan-400 px-1.5 py-0.5 rounded font-bold">Global</span>
+                </div>
+                <div class="font-bold text-xs text-white group-hover:text-emerald-400">Wise / IBAN</div>
+                <div class="text-[10px] text-slate-500">EUR, GBP, USD rails</div>
+              </button>
+            </div>
+
+            <button onclick="processClientPayment('Default Quick Pay')" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-3 rounded-xl shadow-lg shadow-emerald-500/20 text-sm flex items-center justify-center space-x-2 transition">
+              <span>Authorize & Pay Full $2,400.00</span>
+              <i class="fa-solid fa-arrow-right text-xs"></i>
+            </button>
+          </div>
+
+          <!-- STANDOUT 3: INLINE DISPUTE & QUESTION RESOLUTION -->
+          <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800/80 space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-circle-question text-slate-400 text-xs"></i>
+                <span class="text-xs font-semibold text-slate-300">Have a question or need a PO change before paying?</span>
+              </div>
+              <span class="text-[10px] text-emerald-400">Vendor replies in ~15 mins</span>
+            </div>
+            
+            <div class="flex gap-2">
+              <input 
+                id="disputeQueryInput"
+                type="text" 
+                placeholder="e.g. Please update our AP billing entity to 'Vanguard Global Corp'..." 
+                class="flex-1 bg-slate-900 border border-slate-700 focus:border-indigo-500 text-xs rounded-lg px-3 py-2 text-white placeholder-slate-500 outline-none"
+                onkeydown="if(event.key==='Enter') submitClientDispute()"
+              />
+              <button 
+                onclick="submitClientDispute()" 
+                class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-2 rounded-lg text-xs font-medium border border-slate-700 transition">
+                Ask Vendor
+              </button>
+            </div>
+            <div id="disputeNotice" class="hidden text-[11px] text-indigo-400 bg-indigo-950/30 p-2 rounded border border-indigo-800/40">
+              <i class="fa-solid fa-check mr-1"></i> Note sent to owner. Automatic payment reminder paused for 48 hrs while this is resolved!
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- SUCCESS MODAL FOR CLIENT PAYMENT SIMULATION -->
+  <div id="paymentSuccessModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl">
+      <div class="w-14 h-14 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-2xl">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+      <h3 class="text-xl font-bold text-white">Payment Completed!</h3>
+      <p class="text-xs text-slate-400">
+        Receipt #REC-9941 has been emailed. On the owner's side, the invoice has been <b>auto-reconciled</b> and reminders were killed instantly.
+      </p>
+      <div class="pt-2">
+        <button onclick="closeSuccessAndSwitch()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition">
+          Switch Back to Owner Dashboard
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPLICATION LOGIC SCRIPT -->
+  <script>
+    let invoices = [
+      {
+        id: "INV-1029",
+        clientName: "Vanguard Systems",
+        clientEmail: "ap@vanguardsys.com",
+        service: "Sprint 4: Mobile App Architecture & API Spec",
+        amount: 2400,
+        status: "overdue",
+        daysOverdue: 4,
+        dueDate: "Sep 15, 2026",
+        opensCount: 4,
+        reminderStatus: "Smart reminder queued (Friday AP cycle)",
+        items: [
+          { desc: "Backend Microservice Setup", qty: 1, rate: 1600 },
+          { desc: "Payment Gateway & Webhook Integration", qty: 1, rate: 800 }
+        ]
+      },
+      {
+        id: "INV-1028",
+        clientName: "HyperCloud Studios",
+        clientEmail: "finance@hypercloud.io",
+        service: "Brand Identity Design & Guidelines",
+        amount: 2450,
+        status: "pending",
+        daysOverdue: 0,
+        dueDate: "Sep 25, 2026",
+        opensCount: 1,
+        reminderStatus: "Gentle reminder in 4 days",
+        items: [
+          { desc: "Design System Tokens", qty: 1, rate: 1450 },
+          { desc: "Iconography Suite (40 assets)", qty: 1, rate: 1000 }
+        ]
+      },
+      {
+        id: "INV-1027",
+        clientName: "Apex Media",
+        clientEmail: "billing@apexmedia.org",
+        service: "SEO Strategy & Technical Audit",
+        amount: 3200,
+        status: "paid",
+        daysOverdue: 0,
+        dueDate: "Sep 10, 2026",
+        opensCount: 6,
+        reminderStatus: "Settled via ACH (Auto-reconciled)",
+        items: [
+          { desc: "Technical SEO Audit", qty: 1, rate: 2000 },
+          { desc: "Content Cluster Blueprint", qty: 1, rate: 1200 }
+        ]
+      }
+    ];
+
+    let activeInvoiceForClient = invoices[0];
+    let currentFilter = 'all';
+
+    function renderInvoices() {
+      const container = document.getElementById('invoicesList');
+      container.innerHTML = '';
+
+      const filtered = invoices.filter(inv => {
+        if (currentFilter === 'overdue') return inv.status === 'overdue';
+        if (currentFilter === 'pending') return inv.status === 'pending';
+        return true;
+      });
+
+      document.getElementById('invoiceCountBadge').innerText = filtered.length;
+
+      const totalOutstanding = invoices
+        .filter(i => i.status !== 'paid')
+        .reduce((sum, i) => sum + i.amount, 0);
+      document.getElementById('headerOutstanding').innerText = '$' + totalOutstanding.toLocaleString();
+
+      filtered.forEach(inv => {
+        const card = document.createElement('div');
+        card.className = "bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-4 rounded-xl space-y-3 transition group shadow-sm";
+        
+        let statusBadge = "";
+        if (inv.status === 'overdue') {
+          statusBadge = `<span class="bg-red-500/10 text-red-400 border border-red-500/20 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center">
+            <i class="fa-solid fa-triangle-exclamation mr-1"></i> ${inv.daysOverdue}d Overdue
+          </span>`;
+        } else if (inv.status === 'pending') {
+          statusBadge = `<span class="bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center">
+            <i class="fa-solid fa-hourglass-half mr-1"></i> Due in ${inv.dueDate}
+          </span>`;
+        } else {
+          statusBadge = `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center">
+            <i class="fa-solid fa-circle-check mr-1"></i> Reconciled & Paid
+          </span>`;
+        }
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between">
+            <div>
+              <div class="flex items-center space-x-2">
+                <span class="font-bold text-sm text-white">${inv.clientName}</span>
+                <span class="text-xs text-slate-500">(${inv.id})</span>
+                ${statusBadge}
+              </div>
+              <div class="text-xs text-slate-400 mt-0.5">${inv.service}</div>
+            </div>
+            <div class="text-right">
+              <div class="text-base font-extrabold text-white">$${inv.amount.toLocaleString()}</div>
+              <div class="text-[10px] text-slate-500"><i class="fa-regular fa-envelope-open mr-1"></i>Opened ${inv.opensCount}x by client</div>
+            </div>
+          </div>
+
+          <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 flex items-center justify-between text-xs">
+            <div class="flex items-center space-x-2 text-slate-400 text-[11px] truncate mr-2">
+              <i class="fa-solid fa-robot text-emerald-400"></i>
+              <span>${inv.reminderStatus}</span>
+            </div>
+            <div class="flex items-center space-x-1.5">
+              <button onclick="previewAsClient('${inv.id}')" class="px-2.5 py-1 text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-md border border-slate-700 transition">
+                <i class="fa-solid fa-arrow-up-right-from-square mr-1"></i> Pay Link
+              </button>
+              ${inv.status !== 'paid' ? `
+                <button onclick="markManualPaid('${inv.id}')" class="px-2.5 py-1 text-[11px] font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 rounded-md border border-emerald-500/30 transition">
+                  Mark Paid
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function filterInvoices(type) {
+      currentFilter = type;
+      renderInvoices();
+    }
+
+    function applyPrompt(text) {
+      document.getElementById('promptInput').value = text;
+    }
+
+    function parseAndDraftPrompt() {
+      const input = document.getElementById('promptInput').value.trim();
+      if (!input) return;
+
+      let amountMatch = input.match(/\\$([0-9,]+)/);
+      let amount = amountMatch ? parseInt(amountMatch[1].replace(/,/g, '')) : 1800;
+      
+      let clientName = "New Client Corp";
+      if (input.toLowerCase().includes("nexus")) clientName = "Nexus Labs";
+      else if (input.toLowerCase().includes("peak")) clientName = "Peak Studio";
+      else if (input.toLowerCase().includes("acme")) clientName = "Acme Corp";
+      else if (input.toLowerCase().includes("orbit")) clientName = "Orbit Media";
+      else {
+        const words = input.split(" ");
+        if (words.length > 2) clientName = words[1] + " " + (words[2] || "Co");
+      }
+
+      const newId = "INV-" + (1030 + invoices.length);
+      const newInvoice = {
+        id: newId,
+        clientName: clientName,
+        clientEmail: `finance@${clientName.toLowerCase().replace(/\\s+/g, '')}.com`,
+        service: input,
+        amount: amount,
+        status: "pending",
+        daysOverdue: 0,
+        dueDate: "Oct 05, 2026",
+        opensCount: 0,
+        reminderStatus: "Auto-reminder sequence scheduled (Day -2, Day 0, Day +4)",
+        items: [
+          { desc: input, qty: 1, rate: amount }
+        ]
+      };
+
+      invoices.unshift(newInvoice);
+      document.getElementById('promptInput').value = '';
+
+      const feedback = document.getElementById('draftFeedback');
+      document.getElementById('draftFeedbackText').innerHTML = `
+        <i class="fa-solid fa-check-circle mr-1.5"></i>
+        Drafted & Dispatched <b>${newId}</b> ($${amount}) to <b>${newInvoice.clientEmail}</b>. Payment link & 3-stage reminder cadence active!
+      `;
+      feedback.classList.remove('hidden');
+
+      renderInvoices();
+    }
+
+    function previewAsClient(invoiceId) {
+      const inv = invoices.find(i => i.id === invoiceId) || invoices[0];
+      activeInvoiceForClient = inv;
+      loadClientViewData(inv);
+      switchView('client');
+    }
+
+    function loadClientViewData(inv) {
+      document.getElementById('clientInvoiceNumber').innerText = "Invoice " + inv.id;
+      document.getElementById('clientInvoiceDesc').innerText = inv.service;
+      document.getElementById('clientDueDate').innerText = inv.dueDate;
+      document.getElementById('clientSubtotal').innerText = "$" + inv.amount.toLocaleString() + ".00";
+      document.getElementById('clientTotalDue').innerText = "$" + inv.amount.toLocaleString() + ".00";
+
+      const lineTable = document.getElementById('clientLineItems');
+      lineTable.innerHTML = '';
+      inv.items.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="py-3 font-medium">${item.desc}</td>
+          <td class="py-3 text-right text-slate-400">${item.qty}</td>
+          <td class="py-3 text-right">$${item.rate.toLocaleString()}.00</td>
+          <td class="py-3 text-right font-bold">$${(item.qty * item.rate).toLocaleString()}.00</td>
+        `;
+        lineTable.appendChild(row);
+      });
+
+      const badge = document.getElementById('clientStatusBadge');
+      const payArea = document.getElementById('clientPaymentArea');
+      if (inv.status === 'paid') {
+        badge.className = "inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 mr-2"></span> Paid & Reconciled`;
+        payArea.classList.add('hidden');
+      } else {
+        badge.className = "inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20";
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400 mr-2"></span> Payment Due`;
+        payArea.classList.remove('hidden');
+      }
+    }
+
+    function switchView(view) {
+      const ownerEl = document.getElementById('viewOwner');
+      const clientEl = document.getElementById('viewClient');
+      const tabOwner = document.getElementById('tabOwnerBtn');
+      const tabClient = document.getElementById('tabClientBtn');
+
+      if (view === 'owner') {
+        ownerEl.classList.remove('hidden');
+        clientEl.classList.add('hidden');
+        tabOwner.className = "px-4 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500 text-slate-950 shadow transition-all";
+        tabClient.className = "px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all";
+      } else {
+        ownerEl.classList.add('hidden');
+        clientEl.classList.remove('hidden');
+        tabClient.className = "px-4 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500 text-slate-950 shadow transition-all";
+        tabOwner.className = "px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all";
+        if (activeInvoiceForClient) loadClientViewData(activeInvoiceForClient);
+      }
+    }
+
+    function processClientPayment(method) {
+      if (!activeInvoiceForClient) return;
+      activeInvoiceForClient.status = 'paid';
+      activeInvoiceForClient.reminderStatus = `Settled via ${method} (Auto-matched)`;
+      
+      const recContainer = document.getElementById('reconciliationLog');
+      const newEntry = document.createElement('div');
+      newEntry.className = "p-3 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between";
+      newEntry.innerHTML = `
+        <div class="flex items-center space-x-3">
+          <div class="w-7 h-7 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xs">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          <div>
+            <div class="font-semibold text-white">Direct Settle: ${method}</div>
+            <div class="text-[10px] text-slate-500">${activeInvoiceForClient.clientName} • Just now</div>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="font-bold text-emerald-400">+$${activeInvoiceForClient.amount.toLocaleString()}.00</div>
+          <div class="text-[10px] text-slate-500">Auto-closed ${activeInvoiceForClient.id}</div>
+        </div>
+      `;
+      recContainer.prepend(newEntry);
+
+      document.getElementById('paymentSuccessModal').classList.remove('hidden');
+      renderInvoices();
+    }
+
+    function closeSuccessAndSwitch() {
+      document.getElementById('paymentSuccessModal').classList.add('hidden');
+      switchView('owner');
+    }
+
+    function submitClientDispute() {
+      const q = document.getElementById('disputeQueryInput').value;
+      if (!q) return;
+      document.getElementById('disputeNotice').classList.remove('hidden');
+      if (activeInvoiceForClient) {
+        activeInvoiceForClient.reminderStatus = "Paused: Client asked a question regarding AP entity";
+        renderInvoices();
+      }
+    }
+
+    function markManualPaid(id) {
+      const inv = invoices.find(i => i.id === id);
+      if (inv) {
+        inv.status = 'paid';
+        inv.reminderStatus = 'Manually cleared by owner';
+        renderInvoices();
+      }
+    }
+
+    function triggerSimulatedReminder() {
+      alert("AI Chaser dispatched: A personalized polite SMS & Email was sent to Sarah at Vanguard Systems with the 1-click payment link.");
+    }
+
+    function simulateInboundPayment() {
+      const overdueInv = invoices.find(i => i.status === 'overdue') || invoices[0];
+      overdueInv.status = 'paid';
+      overdueInv.reminderStatus = 'Auto-matched from Chase Direct Deposit ($' + overdueInv.amount + ')';
+      
+      const recContainer = document.getElementById('reconciliationLog');
+      const newEntry = document.createElement('div');
+      newEntry.className = "p-3 bg-slate-950 rounded-xl border border-emerald-700/50 flex items-center justify-between";
+      newEntry.innerHTML = `
+        <div class="flex items-center space-x-3">
+          <div class="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs">
+            <i class="fa-solid fa-building-columns"></i>
+          </div>
+          <div>
+            <div class="font-semibold text-white">Bank Feed Auto-Match (Plaid)</div>
+            <div class="text-[10px] text-slate-400">Wire deposit from ${overdueInv.clientName}</div>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="font-bold text-emerald-400">+$${overdueInv.amount.toLocaleString()}.00</div>
+          <div class="text-[10px] text-emerald-300">Auto-reconciled ${overdueInv.id}</div>
+        </div>
+      `;
+      recContainer.prepend(newEntry);
+      renderInvoices();
+    }
+
+    renderInvoices();
+  </script>
+</body>
+</html>

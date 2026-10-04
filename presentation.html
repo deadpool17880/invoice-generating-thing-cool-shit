@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FLOWLEDGER AI - 7-Slide Pitch Deck</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
+
+    :root {
+      --primary-navy: #0B192C;
+      --card-bg: #F4F6FB;
+      --accent-blue: #1D61E0;
+      --accent-light: #38BDF8;
+      --text-dark: #0F172A;
+      --text-muted: #475569;
+      --border-subtle: #E2E8F0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #030712;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 12px;
+      gap: 36px;
+    }
+
+    /* Fixed 16:9 Presentation Slide Canvas */
+    .slide-canvas {
+      width: 1120px;
+      height: 630px;
+      position: relative;
+      background-color: #FFFFFF;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      page-break-after: always;
+    }
+
+    /* Slide 1 Cover Styling */
+    .slide-cover {
+      background: linear-gradient(135deg, #0B192C 0%, #0d2342 60%, #112d55 100%);
+      color: #FFFFFF;
+      justify-content: center;
+      padding: 80px 100px;
+    }
+
+    .cover-brand {
+      font-size: 54px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #FFFFFF;
+      text-transform: uppercase;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .cover-subtitle {
+      font-size: 22px;
+      font-weight: 400;
+      color: #94A3B8;
+      margin-top: 14px;
+      max-width: 750px;
+      line-height: 1.4;
+    }
+
+    .cover-bar {
+      width: 84px;
+      height: 6px;
+      background-color: #38BDF8;
+      margin-top: 24px;
+      border-radius: 3px;
+    }
+
+    .cover-team {
+      position: absolute;
+      bottom: 60px;
+      left: 100px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #64748B;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* Standard Slide Header */
+    .slide-header {
+      padding: 40px 64px 16px 64px;
+    }
+
+    .section-tag {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      color: var(--accent-blue);
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .slide-title {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--primary-navy);
+      letter-spacing: -0.02em;
+    }
+
+    .title-bar {
+      width: 48px;
+      height: 4px;
+      background-color: var(--accent-blue);
+      margin-top: 10px;
+      border-radius: 2px;
+    }
+
+    /* Content Area */
+    .slide-body {
+      flex: 1;
+      padding: 10px 64px 36px 64px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Reference Style Rounded Card */
+    .content-card {
+      background-color: var(--card-bg);
+      border: 1px solid #E6ECF5;
+      border-radius: 24px;
+      padding: 24px 28px;
+    }
+
+    .content-card p {
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: #334155;
+      margin-bottom: 11px;
+    }
+
+    .content-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* 2 Column Comparison Grid */
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      height: 100%;
+    }
+
+    .col-title {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      color: var(--accent-blue);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .bullet-list li {
+      font-size: 12.8px;
+      line-height: 1.45;
+      color: #334155;
+      position: relative;
+      padding-left: 16px;
+    }
+
+    .bullet-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--accent-blue);
+      font-weight: 800;
+      font-size: 16px;
+      line-height: 14px;
+    }
+
+    /* Pipeline Banner on Slide 4 */
+    .pipeline-banner {
+      background-color: var(--primary-navy);
+      color: #F8FAFC;
+      border-radius: 14px;
+      padding: 14px 20px;
+      font-size: 12.5px;
+      font-weight: 600;
+      line-height: 1.5;
+      margin-bottom: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .pipeline-banner span.arr {
+      color: var(--accent-light);
+      margin: 0 5px;
+      font-weight: 800;
+    }
+
+    /* Card Rows on Slide 5 */
+    .card-row-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+
+    .row-card {
+      background-color: var(--card-bg);
+      border: 1px solid #E6ECF5;
+      border-radius: 16px;
+      padding: 13px 22px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .row-card-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--accent-blue);
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    .row-card-text {
+      font-size: 13px;
+      line-height: 1.45;
+      color: #334155;
+    }
+
+    .row-card-text strong {
+      color: var(--primary-navy);
+    }
+
+    /* Footer Meta Bar matching reference */
+    .slide-footer {
+      height: 38px;
+      border-top: 1px solid #EDF2F7;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 64px;
+      font-size: 10px;
+      color: #94A3B8;
+      letter-spacing: 0.04em;
+    }
+
+    /* Control Toolbar */
+    .toolbar {
+      position: fixed;
+      top: 18px;
+      right: 24px;
+      z-index: 100;
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-action {
+      background-color: #1D61E0;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(29, 97, 224, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-action:hover {
+      background-color: #144ebd;
+      transform: translateY(-1px);
+    }
+
+    /* Print settings for direct 1-click Export to PDF */
+    @media print {
+      body {
+        background: none;
+        padding: 0;
+        gap: 0;
+      }
+      .toolbar {
+        display: none !important;
+      }
+      .slide-canvas {
+        box-shadow: none;
+        margin: 0;
+        page-break-after: always;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Print/PDF Bar -->
+  <div class="toolbar">
+    <button class="btn-action" onclick="window.print()">
+      <i class="fa-solid fa-print"></i> Save / Print PDF (16:9)
+    </button>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 1: TITLE / COVER (Reference: Page 1)                    -->
+  <!-- ============================================================ -->
+  <div class="slide-canvas slide-cover">
+    <div class="cover-brand">FLOWLEDGER AI</div>
+    <div class="cover-subtitle">Autonomous "Invoice-to-Cash" Receivables Intelligence Platform for Micro-SMEs</div>
+    <div class="cover-bar"></div>
+    <div class="cover-team">Team — Antigravity &bull; B2B Fintech Track</div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 2: PROPOSED SOLUTION (Reference: Page 2)                -->
+  <!-- ============================================================ -->
+  <div class="slide-canvas">
+    <div class="slide-header">
+      <span class="section-tag">SOLUTION</span>
+      <h1 class="slide-title">Proposed Solution</h1>
+      <div class="title-bar"></div>
+    </div>
+    <div class="slide-body">
+      <div class="content-card">
+        <p><strong>FlowLedger AI</strong> is an autonomous, software-based invoice-to-cash platform engineered specifically for micro and small B2B service businesses (agencies, consultants, contractors, IT boutiques).</p>
+        <p>Instead of requiring business owners to log into complex accounting software, manually build line items, track approvals, and repeatedly chase overdue clients, the system acts as an <strong>autonomous billing employee</strong>.</p>
+        <p>The platform uses Natural Language Processing (NLP) to convert simple messages or project milestone triggers into professional, tax-compliant invoices with embedded instant payment links.</p>
+        <p>It proactively deploys relationship-aware follow-ups tailored to client payout habits, offers frictionless 1-click checkout options (ACH, Apple Pay, cards, multi-currency), and matches bank deposits automatically via open-banking feeds.</p>
+        <p>This eliminates the fragmented 5-step billing cycle, allowing micro-SMEs to reclaim several hours every week and recover outstanding cash dramatically faster with zero administrative friction.</p>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>FLOWLEDGER AI &bull; Autonomous Invoice-to-Cash Platform for Micro-SMEs</span>
+      <span>02</span>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 3: TECHNICAL APPROACH - ARCHITECTURE & STACK (Ref: P3) -->
+  <!-- ============================================================ -->
+  <div class="slide-canvas">
+    <div class="slide-header">
+      <span class="section-tag">ARCHITECTURE &amp; STACK</span>
+      <h1 class="slide-title">Technical Approach</h1>
+      <div class="title-bar"></div>
+    </div>
+    <div class="slide-body">
+      <div class="grid-2col">
+        <!-- Col 1: Backend -->
+        <div class="content-card">
+          <div class="col-title"><i class="fa-solid fa-server"></i> Backend Technologies</div>
+          <ul class="bullet-list">
+            <li><strong>Python &amp; FastAPI:</strong> High-performance asynchronous microservice APIs for invoice dispatch and scheduling.</li>
+            <li><strong>Large Language Model (Gemini / Claude):</strong> Natural language parsing of conversational prompts into structured invoice data models.</li>
+            <li><strong>Plaid &amp; Open Banking APIs:</strong> Real-time direct bank feed ingestion and webhook listener for automated deposit matching.</li>
+            <li><strong>PostgreSQL:</strong> Relational data store for organizations, client records, ledger line items, and audit trails.</li>
+            <li><strong>Redis &amp; Celery:</strong> In-memory queue orchestrating graduated reminder sequences and scheduled email/SMS jobs.</li>
+            <li><strong>Stripe Connect &amp; Wise API:</strong> Embedded multi-currency payment rails (ACH, Apple Pay, SEPA, Cards) with instant webhooks.</li>
+          </ul>
+        </div>
+        <!-- Col 2: Frontend -->
+        <div class="content-card">
+          <div class="col-title"><i class="fa-solid fa-desktop"></i> Frontend Technologies</div>
+          <ul class="bullet-list">
+            <li><strong>Next.js &amp; React:</strong> Clean, responsive web dashboard designed for zero-clutter SME receivables management.</li>
+            <li><strong>Client Instant Payment Portal:</strong> Ultra-fast, lightweight mobile/desktop payment interface with 1-click checkout.</li>
+            <li><strong>Tailwind CSS:</strong> Polished modern UI supporting both high-contrast dark cockpit and minimal client invoice views.</li>
+            <li><strong>WebSockets / SSE:</strong> Instant UI status updates when client opens an invoice, pays, or submits a dispute query.</li>
+            <li><strong>Inline Dispute Triage Interface:</strong> Direct communication widget embedded inside the invoice to resolve client PO hold-ups.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>FLOWLEDGER AI &bull; Autonomous Invoice-to-Cash Platform for Micro-SMEs</span>
+      <span>03</span>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 4: PROCESSING FLOW (Reference: Page 4)                 -->
+  <!-- ============================================================ -->
+  <div class="slide-canvas">
+    <div class="slide-header">
+      <span class="section-tag">PROCESSING FLOW</span>
+      <h1 class="slide-title">Technical Approach</h1>
+      <div class="title-bar"></div>
+    </div>
+    <div class="slide-body">
+      <!-- Dark Top Pipeline Banner -->
+      <div class="pipeline-banner">
+        Work Trigger / Chat Prompt <span class="arr">&rarr;</span> NLP Data Extraction <span class="arr">&rarr;</span> Instant Invoice &amp; Link Gen <span class="arr">&rarr;</span> Multi-Channel Dispatch <span class="arr">&rarr;</span> Client Open &amp; Triage Portal <span class="arr">&rarr;</span> Smart Relationship Chaser <span class="arr">&rarr;</span> Multi-Rail Payment <span class="arr">&rarr;</span> Open-Bank Auto-Reconciliation
+      </div>
+
+      <!-- Detail Card Below -->
+      <div class="content-card">
+        <ul class="bullet-list">
+          <li><strong>Autonomous Two-Tier Architecture:</strong> The platform is split into an <em>Owner Cockpit / Ingestion Service</em> and an <em>Autonomous Execution Engine</em> running continuously in the background.</li>
+          <li><strong>Step 1 (Zero-Friction Ingestion):</strong> The owner triggers invoicing simply by typing natural text, syncing a calendar milestone, or confirming a retainer reminder. The LLM extracts client, rate, tax, and due dates without manual forms.</li>
+          <li><strong>Step 2 (Frictionless Client Experience):</strong> The client receives a clean web link. They can pay in 10 seconds via Apple Pay, ACH, or card. If they need a PO change, they message inline, which automatically pauses reminder alarms.</li>
+          <li><strong>Step 3 (Relationship-Aware Chaser &amp; Settle):</strong> If unpaid, the AI chaser politely contacts the client based on their specific AP payout habits (e.g. paying only on alternate Fridays). Once funds land in the bank, open-banking webhooks reconcile the ledger instantly.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>FLOWLEDGER AI &bull; Autonomous Invoice-to-Cash Platform for Micro-SMEs</span>
+      <span>04</span>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 5: FEASIBILITY AND VIABILITY (Reference: Page 5)        -->
+  <!-- ============================================================ -->
+  <div class="slide-canvas">
+    <div class="slide-header">
+      <span class="section-tag">FEASIBILITY</span>
+      <h1 class="slide-title">Feasibility and Viability</h1>
+      <div class="title-bar"></div>
+    </div>
+    <div class="slide-body">
+      <div class="card-row-stack">
+        <div class="row-card">
+          <div class="row-card-dot"></div>
+          <div class="row-card-text">
+            <strong>Seamless Integration with Existing Stacks:</strong> FlowLedger AI does not require businesses to rip and replace their bank accounts or primary ledgers. It connects via open-banking APIs (Plaid, Stripe, Wise) and can push lightweight journal entries to QuickBooks or Xero if desired.
+          </div>
+        </div>
+
+        <div class="row-card">
+          <div class="row-card-dot"></div>
+          <div class="row-card-text">
+            <strong>Scalable Unit Economics &amp; Fast MVP:</strong> By utilizing serverless webhooks, managed LLM APIs for parsing, and turnkey payment rails, infrastructure costs remain pennies per active SME, yielding gross margins above 85% on SaaS subscriptions.
+          </div>
+        </div>
+
+        <div class="row-card">
+          <div class="row-card-dot"></div>
+          <div class="row-card-text">
+            <strong>Mitigating Real-World Risks &amp; Edge Cases:</strong> Primary risks include invoice disputes, bank transfer delays, and client annoyance over automated messages. These are mitigated by incorporating human-in-the-loop overrides, smart tone-matching, and instant pause mechanisms.
+          </div>
+        </div>
+
+        <div class="row-card">
+          <div class="row-card-dot"></div>
+          <div class="row-card-text">
+            <strong>High Market Viability &amp; Sticky Monetization:</strong> Directly addresses the #1 operational bottleneck for micro-SMEs—cash flow delays. Monetization combines predictable SaaS tiers ($19–$49/mo) with transaction processing spread and instant invoice factoring options.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>FLOWLEDGER AI &bull; Autonomous Invoice-to-Cash Platform for Micro-SMEs</span>
+      <span>05</span>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 6: IMPACT OF PROBLEM / BENEFITS (Reference: Page 6)    -->
+  <!-- ============================================================ -->
+  <div class="slide-canvas">
+    <div class="slide-header">
+      <span class="section-tag">PROBLEM &rarr; RESPONSE</span>
+      <h1 class="slide-title">Impact Of The Current Problem / Benefits Of Our Proposed Solution</h1>
+      <div class="title-bar"></div>
+    </div>
+    <div class="slide-body">
+      <div class="grid-2col">
+        <!-- Col 1: Problem -->
+        <div class="content-card">
+          <div class="col-title"><i class="fa-solid fa-triangle-exclamation"></i> Impact of the Current Problem</div>
+          <ul class="bullet-list">
+            <li><strong>Fragmented Multi-Step Workflow:</strong> Owners waste 4–6 hours weekly across Word, email, bank apps, and spreadsheets.</li>
+            <li><strong>Awkward &amp; Delayed Payment Chasing:</strong> Reluctance to manually chase overdue invoices leads to 30–60 day payment lags.</li>
+            <li><strong>Unchecked Client Disputes:</strong> Missing PO numbers or wrong billing entities cause invoices to sit unpaid without notification.</li>
+            <li><strong>Existing Tools Too Complex:</strong> Platforms like NetSuite, QuickBooks, or HighRadius are bloated and require continuous manual inputs.</li>
+            <li><strong>Cash Flow Chokehold:</strong> Micro-SMEs often run out of operational runway waiting for verified receivables to clear.</li>
+          </ul>
+        </div>
+        <!-- Col 2: Solution Benefits -->
+        <div class="content-card">
+          <div class="col-title"><i class="fa-solid fa-shield-halved"></i> Benefits of Our Proposed Solution</div>
+          <ul class="bullet-list">
+            <li><strong>60-Second Invoicing:</strong> Natural language conversational drafting creates verified invoices in seconds.</li>
+            <li><strong>Relationship-Preserving AI Chaser:</strong> Autonomous follow-ups adjust tone and timing to client AP payment schedules.</li>
+            <li><strong>Inline Dispute Triage:</strong> Clients can request changes directly on the payment page, auto-pausing reminder timers.</li>
+            <li><strong>Frictionless Multi-Rail Checkout:</strong> Clients pay immediately via ACH, Apple Pay, or credit card in 1-click.</li>
+            <li><strong>Zero-Touch Bank Reconciliation:</strong> Bank webhook matching clears settled invoices with no ledger reconciliation needed.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>FLOWLEDGER AI &bull; Autonomous Invoice-to-Cash Platform for Micro-SMEs</span>
+      <span>06</span>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 7: RESEARCH AND REFERENCES (Reference: Page 7)          -->
+  <!-- ============================================================ -->
+  <div class="slide-canvas">
+    <div class="slide-header">
+      <span class="section-tag">SOURCES</span>
+      <h1 class="slide-title">Research and References</h1>
+      <div class="title-bar"></div>
+    </div>
+    <div class="slide-body">
+      <div class="content-card">
+        <ul class="bullet-list" style="gap: 13px;">
+          <li><strong>PYMNTS &amp; American Express B2B Payments Study:</strong> "Overcoming B2B Payment Friction: How Automation Reduces DSO (Days Sales Outstanding) by 23% for Small Service Firms." <span style="color:#64748B;">(pymnts.com/study/b2b-receivables-automation)</span></li>
+          <li><strong>Federal Reserve Small Business Credit Survey (SBCS):</strong> "Report on Micro-Enterprise Cash Flow Volatility and Payment Delay Vulnerabilities." <span style="color:#64748B;">(fedsmallbusiness.org/survey/cashflow-delays)</span></li>
+          <li><strong>Open Banking &amp; Financial API Standards:</strong> "Plaid Open Finance Infrastructure: Automated Transaction Enrichment &amp; Direct Bank Account Verification." <span style="color:#64748B;">(plaid.com/resources/open-banking-whitepaper)</span></li>
+          <li><strong>McKinsey &amp; Company Global Payments Report:</strong> "Next-Generation Corporate Treasury: Real-Time Rails, Embedded Invoicing, and Autonomous Cash Matching." <span style="color:#64748B;">(mckinsey.com/industries/financial-services/b2b-payments)</span></li>
+          <li><strong>Stripe Platform Intelligence:</strong> "Optimizing B2B Checkout: How Multi-Rail Invoicing (ACH + Digital Wallets) Accelerates Invoice Settlement." <span style="color:#64748B;">(stripe.com/reports/b2b-invoice-to-cash-benchmarks)</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>FLOWLEDGER AI &bull; Autonomous Invoice-to-Cash Platform for Micro-SMEs</span>
+      <span>07</span>
+    </div>
+  </div>
+
+</body>
+</html>
