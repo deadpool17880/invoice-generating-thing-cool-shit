@@ -57,8 +57,16 @@
         </div>
       </div>
 
+      <!-- Site Navigation Links -->
+      <div class="hidden lg:flex items-center space-x-5 text-xs font-semibold">
+        <a href="index.html" class="text-emerald-400 font-bold">App</a>
+        <a href="pricing.html" class="text-slate-400 hover:text-white transition">Pricing</a>
+        <a href="presentation.html" class="text-slate-400 hover:text-white transition">Pitch Deck</a>
+        <a href="docs.html" class="text-slate-400 hover:text-white transition">Docs</a>
+      </div>
+
       <!-- Quick Metrics Pill -->
-      <div class="hidden md:flex items-center space-x-6 text-xs bg-slate-800/80 px-4 py-2 rounded-full border border-slate-700/60">
+      <div class="hidden xl:flex items-center space-x-6 text-xs bg-slate-800/80 px-4 py-2 rounded-full border border-slate-700/60">
         <div>
           <span class="text-slate-400">Uncollected:</span>
           <span id="headerOutstanding" class="font-bold text-amber-400 ml-1">$4,850</span>
@@ -618,7 +626,7 @@
       console.warn("EmailJS init note:", e);
     }
 
-    // Direct Silent Background Email Dispatch Function
+    // Direct Background Email Dispatch Function with Vercel Serverless & Cloud Fallback
     async function sendEmailNotification(toEmail, amount, deadline, clientName, invoiceId) {
       const subject = "pay me the bill";
       const messageBody = `Hello ${clientName},\n\nThis is a notification regarding your pending invoice (${invoiceId}).\n\n- Bill Amount Due: $${amount.toLocaleString()}\n- Deadline to Pay Off: ${deadline}\n\nPlease settle this bill before the specified deadline.\n\nThank you,\nFlowLedger Autonomous Receivables`;
@@ -626,7 +634,31 @@
       let delivered = false;
       let usedMethod = "";
 
-      // 1. Direct Web3Forms Gateway (Supports direct recipient forwarding)
+      // Step 1: Call Vercel Serverless Function (/api/send-email)
+      try {
+        const apiRes = await fetch("/api/send-email", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            toEmail: toEmail,
+            clientName: clientName,
+            amount: amount,
+            deadline: deadline,
+            invoiceId: invoiceId
+          })
+        });
+
+        if (apiRes.ok) {
+          const apiData = await apiRes.json();
+          if (apiData.success) {
+            return { success: true, method: `Serverless API (${apiData.provider || 'Vercel'})` };
+          }
+        }
+      } catch (e) {
+        console.warn("Local/Vercel serverless endpoint bypassed:", e);
+      }
+
+      // Step 2: Direct Web3Forms Gateway
       try {
         const formData = new FormData();
         formData.append("access_key", "e344e27f-94ad-4d98-b80c-a696236b9c97");
@@ -655,7 +687,7 @@
         console.warn("Primary gateway error:", err);
       }
 
-      // 2. Secondary Relay fallback (Formspree Direct Relay)
+      // Step 3: Secondary Formspree Relay
       if (!delivered) {
         try {
           const res2 = await fetch("https://formspree.io/f/mqkenwva", {
@@ -695,7 +727,7 @@
         .then(result => {
           inv.reminderStatus = `Direct Email dispatched to ${inv.clientEmail} ("pay me the bill")`;
           renderInvoices();
-          alert(`✅ Email Dispatched Directly!\n\nTo: ${inv.clientEmail}\nSubject: "pay me the bill"\nBill Amount: $${inv.amount.toLocaleString()}\nDeadline: ${inv.dueDate}`);
+          alert(`✅ Email Dispatched!\n\nTo: ${inv.clientEmail}\nSubject: "pay me the bill"\nBill Amount: $${inv.amount.toLocaleString()}\nDeadline: ${inv.dueDate}\nStatus: Delivered via ${result.method}`);
         });
     }
 
@@ -724,7 +756,7 @@
         deadline = dueMatch[1].trim();
       }
 
-      // 3. Extract Clean Client Name (ignore words like 'bill', 'invoice', numbers, 'deadline')
+      // 3. Extract Clean Client Name
       let clientName = "Client";
       if (input.toLowerCase().includes("nexus")) clientName = "Nexus Labs";
       else if (input.toLowerCase().includes("peak")) clientName = "Peak Studio";
@@ -732,9 +764,7 @@
       else if (input.toLowerCase().includes("orbit")) clientName = "Orbit Media";
       else if (input.toLowerCase().includes("hypercloud")) clientName = "HyperCloud Studios";
       else {
-        // Strip common prefix triggers
         let clean = input.replace(/^(bill|invoice|charge|send invoice to|send bill to)\s+/i, '');
-        // Split by amount, 'for', 'due', 'deadline'
         let nameChunk = clean.split(/(\$|[0-9]{3,}|for|due|deadline)/i)[0].trim();
         if (nameChunk && nameChunk.length > 1) {
           clientName = nameChunk;
@@ -750,7 +780,7 @@
       btnText.innerText = "Sending Directly...";
       sendBtn.disabled = true;
 
-      // Execute 100% Background Silent Email Dispatch (NO mail app popup!)
+      // Execute background email dispatch
       const emailResult = await sendEmailNotification(finalEmail, amount, deadline, clientName, newId);
 
       btnText.innerText = "Generate & Send Real Email";
@@ -779,7 +809,7 @@
       const feedback = document.getElementById('draftFeedback');
       document.getElementById('draftFeedbackText').innerHTML = `
         <i class="fa-solid fa-check-circle mr-1.5 text-emerald-400"></i>
-        Email sent directly to <b>${finalEmail}</b>! Subject: <b>"pay me the bill"</b> &bull; Amount: <b>$${amount.toLocaleString()}</b> &bull; Deadline: <b>${deadline}</b>.
+        Email sent directly to <b>${finalEmail}</b>! Subject: <b>"pay me the bill"</b> &bull; Amount: <b>$${amount.toLocaleString()}</b> &bull; Deadline: <b>${deadline}</b> (${emailResult.method}).
       `;
       feedback.classList.remove('hidden');
 
@@ -932,5 +962,29 @@
 
     renderInvoices();
   </script>
+
+  <!-- Complete Site Footer -->
+  <footer class="border-t border-slate-800 py-10 bg-slate-950 text-xs text-slate-500 mt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="flex items-center space-x-3">
+        <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+          <i class="fa-solid fa-bolt-lightning text-xs"></i>
+        </div>
+        <div>
+          <span class="font-bold text-white text-sm">FlowLedger AI</span>
+          <p class="text-[11px] text-slate-400">Autonomous Receivables &amp; Invoicing Platform for Micro-SMEs</p>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center gap-6 text-xs font-semibold">
+        <a href="index.html" class="hover:text-emerald-400 transition">App Cockpit</a>
+        <a href="pricing.html" class="hover:text-emerald-400 transition">Pricing &amp; Plans</a>
+        <a href="presentation.html" class="hover:text-emerald-400 transition">Pitch Deck (16:9)</a>
+        <a href="docs.html" class="hover:text-emerald-400 transition">Architecture Docs</a>
+      </div>
+      <div class="text-[11px] text-slate-500">
+        &copy; 2026 FlowLedger Inc. Production Ready.
+      </div>
+    </div>
+  </footer>
 </body>
 </html>

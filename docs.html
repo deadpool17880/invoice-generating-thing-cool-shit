@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>System Documentation & API | FlowLedger AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@600;700&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .heading-font { font-family: 'Space Grotesk', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-emerald-500 selection:text-slate-950">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-slate-950 font-extrabold shadow-lg shadow-emerald-500/20 text-lg">
+          <i class="fa-solid fa-bolt-lightning"></i>
+        </div>
+        <div>
+          <span class="font-bold text-lg tracking-tight text-white heading-font">FlowLedger AI</span>
+          <span class="bg-indigo-500/10 text-indigo-400 text-xs px-2 py-0.5 rounded-full font-semibold border border-indigo-500/20 ml-2">Developer Docs</span>
+        </div>
+      </a>
+      <div class="flex items-center space-x-4 text-xs font-semibold">
+        <a href="index.html" class="text-slate-400 hover:text-white transition">Dashboard</a>
+        <a href="pricing.html" class="text-slate-400 hover:text-white transition">Pricing</a>
+        <a href="presentation.html" class="text-slate-400 hover:text-white transition">Pitch Deck</a>
+        <a href="index.html" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-4 py-2 rounded-xl transition">Open App</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Docs Layout -->
+  <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="lg:col-span-3 space-y-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sticky top-24 space-y-4">
+        <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Architecture Guides</div>
+        <nav class="space-y-1 text-xs">
+          <a href="#overview" class="block px-3 py-2 rounded-lg bg-emerald-500/10 text-emerald-400 font-bold border border-emerald-500/20">1. System Overview</a>
+          <a href="#nlp-engine" class="block px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">2. Natural Language Parser</a>
+          <a href="#email-dispatch" class="block px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">3. Real Email & Webhook Engine</a>
+          <a href="#smart-chaser" class="block px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">4. Smart Relationship Chaser</a>
+          <a href="#reconciliation" class="block px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">5. Open-Banking Reconciliation</a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="lg:col-span-9 space-y-10">
+
+      <!-- Section 1: Overview -->
+      <section id="overview" class="space-y-4">
+        <h1 class="text-3xl font-black text-white heading-font">System Architecture & Overview</h1>
+        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+          FlowLedger AI operates as an autonomous, multi-rail receivables agent. Instead of requiring human bookkeeping oversight, it listens to communication triggers, creates structured ledger payloads, verifies compliance, and enforces receivables collection.
+        </p>
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">High-Level Ingestion Pipeline</div>
+          <div class="bg-slate-950 p-4 rounded-xl text-xs text-emerald-400 overflow-x-auto">
+            User Trigger (Chat / Calendar / Slack) &rarr; LLM Token Extractor &rarr; Canonical Invoice JSON &rarr; Dispatcher (Email / WhatsApp) &rarr; Webhook Settlement
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: NLP Parser -->
+      <section id="nlp-engine" class="space-y-4 border-t border-slate-800 pt-8">
+        <h2 class="text-xl font-bold text-white heading-font">2. Natural Language Parsing Specification</h2>
+        <p class="text-xs text-slate-400">
+          FlowLedger uses high-throughput lightweight LLMs (GPT-4o mini / Gemini Flash) to parse conversational text into valid, RFC-compliant accounting payloads.
+        </p>
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-2">
+          <div class="flex items-center justify-between text-xs text-slate-400">
+            <span>Canonical Schema Output</span>
+            <span class="text-emerald-400">application/json</span>
+          </div>
+          <pre class="bg-slate-950 p-4 rounded-xl text-xs text-slate-300 overflow-x-auto"><code>{
+  "invoice_id": "INV-1034",
+  "client_name": "Apex Creative Studios",
+  "recipient_email": "billing@apexstudios.com",
+  "bill_amount": 2400.00,
+  "currency": "USD",
+  "payment_deadline": "2026-10-15",
+  "line_items": [
+    { "description": "Sprint 4: Mobile API Spec", "quantity": 1, "rate": 2400.00 }
+  ],
+  "escalation_cadence": ["T-2", "T-0", "T+4", "T+10"],
+  "status": "pending"
+}</code></pre>
+        </div>
+      </section>
+
+      <!-- Section 3: Real Email Dispatch -->
+      <section id="email-dispatch" class="space-y-4 border-t border-slate-800 pt-8">
+        <h2 class="text-xl font-bold text-white heading-font">3. Real Email & Webhook Dispatch Pipeline</h2>
+        <p class="text-xs text-slate-400">
+          The email system bypasses local email client popups (`mailto:`) by transmitting authenticated HTTP payload requests through cloud messaging relays directly into recipient inboxes.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2">
+            <div class="font-bold text-white flex items-center"><i class="fa-solid fa-envelope text-emerald-400 mr-2"></i> Subject Rule</div>
+            <div class="bg-slate-950 p-2.5 rounded-lg text-emerald-300 font-mono">pay me the bill</div>
+            <p class="text-slate-400 text-[11px]">Strictly configured subject line matching requirements.</p>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2">
+            <div class="font-bold text-white flex items-center"><i class="fa-solid fa-list-check text-indigo-400 mr-2"></i> Dynamic Body Matter</div>
+            <div class="bg-slate-950 p-2.5 rounded-lg text-slate-300 font-mono text-[10px]">
+              - Bill Amount Due: $X,XXX<br />- Deadline to Pay Off: [Date]
+            </div>
+            <p class="text-slate-400 text-[11px]">Includes polite greeting and clear settlement deadlines.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: Smart Chaser -->
+      <section id="smart-chaser" class="space-y-4 border-t border-slate-800 pt-8">
+        <h2 class="text-xl font-bold text-white heading-font">4. Smart Relationship Chaser Protocol</h2>
+        <p class="text-xs text-slate-400">
+          Unlike standard automation engines that blindly send repeated notices, the FlowLedger AI engine adapts its schedule based on client AP payment history and immediately halts reminders when an inline question is lodged.
+        </p>
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+          <ul class="space-y-2 text-xs text-slate-300">
+            <li class="flex items-center"><span class="w-2 h-2 rounded-full bg-emerald-400 mr-2"></span> <b>Dispute Lockout:</b> Client question pauses automated notifications for 48 hours.</li>
+            <li class="flex items-center"><span class="w-2 h-2 rounded-full bg-indigo-400 mr-2"></span> <b>AP Habit Tracking:</b> Respects Friday and month-end corporate payroll payment routines.</li>
+            <li class="flex items-center"><span class="w-2 h-2 rounded-full bg-amber-400 mr-2"></span> <b>Tone Modulation:</b> Transitions gracefully from helpful reminder to formal inquiry.</li>
+          </ul>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 py-8 bg-slate-950 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div class="flex items-center space-x-2">
+        <span class="font-bold text-white heading-font">FlowLedger AI</span>
+        <span>&bull; Developer &amp; Architecture Documentation</span>
+      </div>
+      <div class="flex space-x-6">
+        <a href="index.html" class="hover:text-white">App</a>
+        <a href="pricing.html" class="hover:text-white">Pricing</a>
+        <a href="presentation.html" class="hover:text-white">Pitch Deck</a>
+        <a href="docs.html" class="hover:text-white">Docs</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
