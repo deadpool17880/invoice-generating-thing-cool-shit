@@ -1,0 +1,4 @@
+# Do not commit any files that contain secret environment variables
+.env
+.env.local
+

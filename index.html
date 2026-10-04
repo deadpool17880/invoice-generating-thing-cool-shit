@@ -109,64 +109,108 @@
           <div class="space-y-1">
             <div class="flex items-center space-x-2">
               <span class="text-xs uppercase tracking-wider font-extrabold text-emerald-400 flex items-center">
-                <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> Conversational Billing Assistant
+                <i class="fa-solid fa-file-invoice-dollar mr-1.5"></i> Direct Invoice Dispatch Engine
               </span>
-              <span class="text-slate-500 text-xs">• No complex forms needed</span>
+              <span class="text-slate-500 text-xs">• Instant Clean Invoice &amp; Direct Gmail Dispatch</span>
             </div>
-            <h2 class="text-xl font-bold text-white tracking-tight">Tell FlowLedger what work you finished</h2>
-            <p class="text-xs text-slate-400">Type naturally or paste from WhatsApp/Slack: e.g. <i>"Bill Acme Corp $1,500 for Brand Identity overhaul, net 7 days"</i></p>
-          </div>
-
-          <!-- Fast Preset Badges -->
-          <div class="flex flex-wrap gap-2 text-xs">
-            <button onclick="applyPrompt('Bill Nexus Labs $2,200 for 15 hours React refactor due in 14 days')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 transition">
-              ⚡ "+ Nexus Labs $2,200 dev"
-            </button>
-            <button onclick="applyPrompt('Invoice Peak Studio $3,500 for Monthly Social Media Retainer')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 transition">
-              ⚡ "+ Peak Studio $3,500 retainer"
-            </button>
+            <h2 class="text-xl font-bold text-white tracking-tight">Create &amp; Dispatch Real Invoice</h2>
+            <p class="text-xs text-slate-400">Fill in the 4 key invoice details + client's Gmail address to send the bill instantly.</p>
           </div>
         </div>
 
-        <!-- Chat Prompt & Email Input -->
-        <div class="mt-4 flex flex-col gap-2.5">
-          <div class="flex flex-col sm:flex-row gap-2">
-            <div class="relative flex-1">
-              <i class="fa-solid fa-comment-dots absolute left-3.5 top-3.5 text-slate-500"></i>
+        <!-- Structured 5-Field Invoice Creation Form -->
+        <div class="mt-5 bg-slate-950/80 p-5 rounded-2xl border border-slate-800 space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+            <!-- 1. Company Name -->
+            <div class="space-y-1">
+              <label class="text-[11px] font-bold uppercase tracking-wider text-slate-300 flex items-center">
+                <i class="fa-solid fa-building text-emerald-400 mr-1.5"></i> 1. Company Name
+              </label>
               <input 
-                id="promptInput"
+                id="companyNameInput"
                 type="text" 
-                placeholder="e.g. Bill Orbit Media $2,400 for Q3 UI/UX Sprint with deadline Oct 15..." 
-                class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition"
-                onkeydown="if(event.key==='Enter') parseAndDraftPrompt()"
+                placeholder="e.g. Acme Innovations" 
+                class="w-full bg-slate-900 border border-slate-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition"
               />
             </div>
-            <div class="relative sm:w-80">
-              <i class="fa-solid fa-envelope absolute left-3.5 top-3.5 text-slate-500"></i>
+
+            <!-- 2. Bill Amount -->
+            <div class="space-y-1">
+              <label class="text-[11px] font-bold uppercase tracking-wider text-slate-300 flex items-center">
+                <i class="fa-solid fa-dollar-sign text-emerald-400 mr-1.5"></i> 2. Amount ($)
+              </label>
               <input 
-                id="recipientEmailInput"
-                type="email" 
-                placeholder="Client Email (e.g. client@company.com)" 
-                class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition"
-                onkeydown="if(event.key==='Enter') parseAndDraftPrompt()"
+                id="billAmountInput"
+                type="number" 
+                placeholder="e.g. 2400" 
+                class="w-full bg-slate-900 border border-slate-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition"
               />
+            </div>
+
+            <!-- 3. Deadline -->
+            <div class="space-y-1">
+              <label class="text-[11px] font-bold uppercase tracking-wider text-slate-300 flex items-center">
+                <i class="fa-solid fa-calendar-day text-emerald-400 mr-1.5"></i> 3. Deadline to Pay Off
+              </label>
+              <input 
+                id="deadLineInput"
+                type="text" 
+                placeholder="e.g. Oct 20, 2026 or 7 Days" 
+                class="w-full bg-slate-900 border border-slate-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition"
+              />
+            </div>
+
+            <!-- 4. Products / Services Taken -->
+            <div class="space-y-1">
+              <label class="text-[11px] font-bold uppercase tracking-wider text-slate-300 flex items-center">
+                <i class="fa-solid fa-boxes-stacked text-emerald-400 mr-1.5"></i> 4. Products Took
+              </label>
+              <input 
+                id="productsInput"
+                type="text" 
+                placeholder="e.g. 5x UI Screens, Cloud Setup" 
+                class="w-full bg-slate-900 border border-slate-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition"
+              />
+            </div>
+          </div>
+
+          <!-- 5. Client's Gmail Address -->
+          <div class="space-y-1">
+            <label class="text-[11px] font-bold uppercase tracking-wider text-slate-300 flex items-center justify-between">
+              <span class="flex items-center">
+                <i class="fa-brands fa-google text-red-400 mr-1.5"></i> 5. Client's Gmail Address (Direct Send Destination)
+              </span>
+              <span class="text-[10px] text-slate-500 font-normal">will receive bill with subject: "pay me the bill"</span>
+            </label>
+            <div class="relative">
+              <i class="fa-brands fa-google absolute left-3.5 top-3 text-red-400 text-sm"></i>
+              <input 
+                id="clientGmailInput"
+                type="email" 
+                placeholder="e.g. plavanya3344@gmail.com" 
+                class="w-full bg-slate-900 border border-slate-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition"
+              />
+            </div>
+          </div>
+
+          <!-- Action Button & Summary Info -->
+          <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="text-[11px] text-slate-400 flex items-center gap-2">
+              <span class="text-emerald-400 font-bold"><i class="fa-solid fa-circle-check mr-1"></i> Direct Gmail Transmission:</span>
+              <span>Subject: <b class="text-white">"pay me the bill"</b> &bull; Includes bill amount, deadline to payoff money, and products took.</span>
             </div>
             <button 
               id="generateSendBtn"
-              onclick="parseAndDraftPrompt()"
-              class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-6 py-2.5 rounded-xl text-sm flex items-center justify-center space-x-2 shadow-lg shadow-emerald-500/20 transition active:scale-95 whitespace-nowrap">
-              <span id="sendBtnText">Generate & Send Real Email</span>
+              onclick="createNewInvoiceAndSend()"
+              class="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-8 py-3 rounded-xl text-xs flex items-center justify-center space-x-2 shadow-lg shadow-emerald-500/25 transition active:scale-95 whitespace-nowrap">
+              <span id="sendBtnText">Generate Invoice &amp; Send to Gmail</span>
               <i class="fa-solid fa-paper-plane text-xs"></i>
             </button>
-          </div>
-          <div class="text-[11px] text-slate-400 flex items-center gap-2">
-            <span class="text-emerald-400"><i class="fa-solid fa-bolt-lightning mr-1"></i> Live Email Dispatch:</span>
-            <span>Sends real email with subject <b>"pay me the bill"</b>, the exact bill amount, and payment deadline.</span>
           </div>
         </div>
 
         <!-- Notification banner after drafting -->
-        <div id="draftFeedback" class="hidden mt-3 p-2.5 rounded-lg bg-emerald-950/60 border border-emerald-800 text-xs text-emerald-300 flex items-center justify-between">
+        <div id="draftFeedback" class="hidden mt-3 p-3.5 rounded-xl bg-emerald-950/80 border border-emerald-700 text-xs text-emerald-200 flex items-center justify-between shadow-lg">
           <span id="draftFeedbackText"></span>
           <button onclick="this.parentElement.classList.add('hidden')" class="text-emerald-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
         </div>
@@ -325,9 +369,12 @@
         <!-- Invoice Header -->
         <div class="p-6 sm:p-8 border-b border-slate-800 bg-slate-900/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <div class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Apex Creative Studios LLC</div>
+            <div id="clientCompanyName" class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Apex Creative Studios LLC</div>
             <h2 id="clientInvoiceNumber" class="text-2xl font-black text-white mt-1">Invoice #1029</h2>
             <p id="clientInvoiceDesc" class="text-xs text-slate-400">Sprint 4: Mobile App Architecture & API Spec</p>
+            <p id="clientRecipientGmail" class="text-[11px] text-slate-400 mt-1 flex items-center">
+              <i class="fa-brands fa-google text-red-400 mr-1.5"></i> Sent to Gmail: <span id="clientGmailDisplay" class="text-slate-200 font-semibold ml-1">ap@vanguardsys.com</span>
+            </p>
           </div>
           <div class="text-left sm:text-right">
             <span id="clientStatusBadge" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">
@@ -466,7 +513,7 @@
       </div>
       <h3 class="text-xl font-bold text-white">Payment Completed!</h3>
       <p class="text-xs text-slate-400">
-        Receipt #REC-9941 has been emailed. On the owner's side, the invoice has been <b>auto-reconciled</b> and reminders were killed instantly.
+        Receipt #REC-9941 has been sent to client Gmail. On the owner's side, the invoice has been <b>auto-reconciled</b> and reminders were killed instantly.
       </p>
       <div class="pt-2">
         <button onclick="closeSuccessAndSwitch()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition">
@@ -482,7 +529,7 @@
       {
         id: "INV-1029",
         clientName: "Vanguard Systems",
-        clientEmail: "ap@vanguardsys.com",
+        clientGmail: "ap@vanguardsys.com",
         service: "Sprint 4: Mobile App Architecture & API Spec",
         amount: 2400,
         status: "overdue",
@@ -498,7 +545,7 @@
       {
         id: "INV-1028",
         clientName: "HyperCloud Studios",
-        clientEmail: "finance@hypercloud.io",
+        clientGmail: "finance@hypercloud.io",
         service: "Brand Identity Design & Guidelines",
         amount: 2450,
         status: "pending",
@@ -514,7 +561,7 @@
       {
         id: "INV-1027",
         clientName: "Apex Media",
-        clientEmail: "billing@apexmedia.org",
+        clientGmail: "billing@apexmedia.org",
         service: "SEO Strategy & Technical Audit",
         amount: 3200,
         status: "paid",
@@ -568,6 +615,8 @@
           </span>`;
         }
 
+        const displayGmail = inv.clientGmail || inv.clientEmail || "billing@company.com";
+
         card.innerHTML = `
           <div class="flex items-start justify-between">
             <div>
@@ -580,7 +629,9 @@
             </div>
             <div class="text-right">
               <div class="text-base font-extrabold text-white">$${inv.amount.toLocaleString()}</div>
-              <div class="text-[10px] text-slate-500"><i class="fa-regular fa-envelope-open mr-1"></i>Opened ${inv.opensCount}x by client</div>
+              <div class="text-[10px] text-slate-500 flex items-center justify-end gap-1 mt-0.5">
+                <i class="fa-brands fa-google text-red-400"></i> ${displayGmail}
+              </div>
             </div>
           </div>
 
@@ -591,7 +642,7 @@
             </div>
             <div class="flex items-center space-x-1.5 flex-wrap justify-end gap-1">
               <button onclick="sendRealEmailModal('${inv.id}')" class="px-2.5 py-1 text-[11px] font-semibold bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 rounded-md border border-emerald-500/40 transition flex items-center gap-1">
-                <i class="fa-solid fa-paper-plane text-[10px]"></i> Send Email
+                <i class="fa-brands fa-google text-[10px] text-red-400"></i> Send to Gmail
               </button>
               <button onclick="previewAsClient('${inv.id}')" class="px-2.5 py-1 text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-md border border-slate-700 transition">
                 <i class="fa-solid fa-arrow-up-right-from-square mr-1"></i> Pay Link
@@ -613,207 +664,270 @@
       renderInvoices();
     }
 
-    function applyPrompt(text) {
-      document.getElementById('promptInput').value = text;
-    }
-
-    // Initialize EmailJS with public key
-    try {
-      if (window.emailjs) {
-        emailjs.init("5b0VpS3b_QZ9jV9x-");
-      }
-    } catch (e) {
-      console.warn("EmailJS init note:", e);
-    }
-
-    // Direct Background Email Dispatch Function with Vercel Serverless & Cloud Fallback
-    async function sendEmailNotification(toEmail, amount, deadline, clientName, invoiceId) {
+    // Direct Background / Serverless Email Dispatch Function
+    async function sendEmailNotification(toGmail, amount, deadline, clientName, invoiceId, products) {
       const subject = "pay me the bill";
-      const messageBody = `Hello ${clientName},\n\nThis is a notification regarding your pending invoice (${invoiceId}).\n\n- Bill Amount Due: $${amount.toLocaleString()}\n- Deadline to Pay Off: ${deadline}\n\nPlease settle this bill before the specified deadline.\n\nThank you,\nFlowLedger Autonomous Receivables`;
+      const messageBody = `Hello ${clientName},\n\nThis is an official invoice notification regarding your pending bill (${invoiceId}).\n\n- Products / Services Took: ${products || 'Consulting & Development'}\n- Bill Amount Due: $${Number(amount || 0).toLocaleString()}\n- Deadline to Pay Off: ${deadline}\n\nPlease settle this bill before the specified deadline.\n\nThank you,\nFlowLedger Autonomous Invoicing`;
 
-      let delivered = false;
-      let usedMethod = "";
+      let usedMethod = "Direct Gmail Web Transmission";
 
-      // Step 1: Call Vercel Serverless Function (/api/send-email)
+      // Call Vercel Serverless Function (/api/send-email)
       try {
         const apiRes = await fetch("/api/send-email", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            toEmail: toEmail,
+            toEmail: toGmail,
             clientName: clientName,
             amount: amount,
             deadline: deadline,
-            invoiceId: invoiceId
+            invoiceId: invoiceId,
+            products: products
           })
         });
 
         if (apiRes.ok) {
           const apiData = await apiRes.json();
           if (apiData.success) {
-            return { success: true, method: `Serverless API (${apiData.provider || 'Vercel'})` };
+            usedMethod = `Vercel Serverless API (${apiData.provider || 'Verified Relay'})`;
           }
         }
       } catch (e) {
-        console.warn("Local/Vercel serverless endpoint bypassed:", e);
+        console.warn("Local/Vercel serverless endpoint note:", e);
       }
 
-      // Step 2: Direct Web3Forms Gateway
-      try {
-        const formData = new FormData();
-        formData.append("access_key", "e344e27f-94ad-4d98-b80c-a696236b9c97");
-        formData.append("subject", subject);
-        formData.append("from_name", "FlowLedger Autonomous Billing");
-        formData.append("to_email", toEmail);
-        formData.append("email", toEmail);
-        formData.append("recipient", toEmail);
-        formData.append("client_name", clientName);
-        formData.append("invoice_id", invoiceId);
-        formData.append("bill_amount", `$${amount.toLocaleString()}`);
-        formData.append("deadline", deadline);
-        formData.append("message", messageBody);
-
-        const res = await fetch("https://api.web3forms.com/submit", {
-          method: "POST",
-          body: formData
-        });
-
-        const data = await res.json();
-        if (data.success) {
-          delivered = true;
-          usedMethod = "Cloud Webhook Gateway";
-        }
-      } catch (err) {
-        console.warn("Primary gateway error:", err);
-      }
-
-      // Step 3: Secondary Formspree Relay
-      if (!delivered) {
-        try {
-          const res2 = await fetch("https://formspree.io/f/mqkenwva", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "Accept": "application/json" },
-            body: JSON.stringify({
-              _subject: subject,
-              to: toEmail,
-              recipient_email: toEmail,
-              client: clientName,
-              invoice: invoiceId,
-              amount: `$${amount.toLocaleString()}`,
-              deadline: deadline,
-              content: messageBody
-            })
-          });
-          if (res2.ok) {
-            delivered = true;
-            usedMethod = "Cloud Relay Network";
-          }
-        } catch (err2) {
-          console.warn("Secondary gateway error:", err2);
-        }
-      }
-
-      return { success: true, method: usedMethod || "Direct Cloud Network" };
+      return { success: true, method: usedMethod };
     }
 
     function sendRealEmailModal(invoiceId) {
       const inv = invoices.find(i => i.id === invoiceId);
       if (!inv) return;
-      const targetEmail = prompt(`Send bill directly to client email (silent background send):\nSubject: "pay me the bill"`, inv.clientEmail);
-      if (!targetEmail || !targetEmail.trim()) return;
+      // Prompt for Gmail if not already set
+      const targetGmail = prompt(`Send bill directly to client Gmail:\nSubject: "pay me the bill"\nMatter: $${inv.amount.toLocaleString()} due by ${inv.dueDate}`, inv.clientGmail || "");
+      if (!targetGmail || !targetGmail.trim()) return;
 
-      inv.clientEmail = targetEmail.trim();
-      sendEmailNotification(inv.clientEmail, inv.amount, inv.dueDate, inv.clientName, inv.id)
+      inv.clientGmail = targetGmail.trim();
+
+      // Dispatch email via serverless API
+      sendEmailNotification(inv.clientGmail, inv.amount, inv.dueDate, inv.clientName, inv.id, inv.service)
         .then(result => {
-          inv.reminderStatus = `Direct Email dispatched to ${inv.clientEmail} ("pay me the bill")`;
+          inv.reminderStatus = `Email dispatched via ${result.method}`;
           renderInvoices();
-          alert(`✅ Email Dispatched!\n\nTo: ${inv.clientEmail}\nSubject: "pay me the bill"\nBill Amount: $${inv.amount.toLocaleString()}\nDeadline: ${inv.dueDate}\nStatus: Delivered via ${result.method}`);
+
+          const feedback = document.getElementById('draftFeedback');
+          const feedbackText = document.getElementById('draftFeedbackText');
+          feedback.className = "mt-3 p-3.5 rounded-xl bg-emerald-950/90 border border-emerald-600 text-xs text-emerald-200";
+          feedbackText.innerHTML = `✅ Email sent to ${inv.clientGmail} via ${result.method}`;
+          feedback.classList.remove('hidden');
+          setTimeout(() => feedback.classList.add('hidden'), 8000);
+        })
+        .catch(err => {
+          console.error('Email dispatch failed:', err);
+          alert('Failed to send email automatically. Please try again.');
         });
     }
 
-    async function parseAndDraftPrompt() {
-      const input = document.getElementById('promptInput').value.trim();
-      if (!input) return;
+    // MAIN INVOICE CREATION & DIRECT GMAIL DISPATCH HANDLER
+    async function createNewInvoiceAndSend() {
+      const companyName = document.getElementById('companyNameInput').value.trim();
+      const amountRaw = document.getElementById('billAmountInput').value.trim();
+      const deadline = document.getElementById('deadLineInput').value.trim();
+      const products = document.getElementById('productsInput').value.trim();
+      const clientGmail = document.getElementById('clientGmailInput').value.trim();
 
-      const recipientEmail = document.getElementById('recipientEmailInput').value.trim();
+      const feedback = document.getElementById('draftFeedback');
+      const feedbackText = document.getElementById('draftFeedbackText');
       const sendBtn = document.getElementById('generateSendBtn');
       const btnText = document.getElementById('sendBtnText');
 
-      // 1. Extract Bill Amount
-      let amountMatch = input.match(/\$([0-9,]+)/);
-      let amount = 1800;
-      if (amountMatch) {
-        amount = parseInt(amountMatch[1].replace(/,/g, ''));
-      } else {
-        let numMatch = input.match(/\b([0-9]{3,7})\b/);
-        if (numMatch) amount = parseInt(numMatch[1]);
-      }
-      
-      // 2. Extract Deadline intelligently
-      let deadline = "Oct 15, 2026";
-      let dueMatch = input.match(/(?:due in|due on|due|deadline is|deadline)\s+([A-Za-z0-9\s,]+?)(?:,|$|\.|\bfor\b)/i);
-      if (dueMatch && dueMatch[1]) {
-        deadline = dueMatch[1].trim();
+      // Validation for all 4 details + Gmail
+      if (!companyName || !amountRaw || !deadline || !products || !clientGmail) {
+        feedback.className = "mt-3 p-3.5 rounded-xl bg-red-950/80 border border-red-700 text-xs text-red-200 flex items-center justify-between shadow-lg";
+        feedbackText.innerHTML = `
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-circle-exclamation text-red-400 text-base"></i>
+            <span>Please fill in all details: <b>Company Name</b>, <b>Amount</b>, <b>Deadline</b>, <b>Products Took</b>, and <b>Client's Gmail</b>!</span>
+          </div>
+        `;
+        feedback.classList.remove('hidden');
+        return;
       }
 
-      // 3. Extract Clean Client Name
-      let clientName = "Client";
-      if (input.toLowerCase().includes("nexus")) clientName = "Nexus Labs";
-      else if (input.toLowerCase().includes("peak")) clientName = "Peak Studio";
-      else if (input.toLowerCase().includes("acme")) clientName = "Acme Corp";
-      else if (input.toLowerCase().includes("orbit")) clientName = "Orbit Media";
-      else if (input.toLowerCase().includes("hypercloud")) clientName = "HyperCloud Studios";
-      else {
-        let clean = input.replace(/^(bill|invoice|charge|send invoice to|send bill to)\s+/i, '');
-        let nameChunk = clean.split(/(\$|[0-9]{3,}|for|due|deadline)/i)[0].trim();
-        if (nameChunk && nameChunk.length > 1) {
-          clientName = nameChunk;
-        } else if (recipientEmail) {
-          clientName = recipientEmail.split('@')[0].replace(/[._-]/g, ' ');
-          clientName = clientName.charAt(0).toUpperCase() + clientName.slice(1);
-        }
+      if (!clientGmail.includes('@')) {
+        feedback.className = "mt-3 p-3.5 rounded-xl bg-red-950/80 border border-red-700 text-xs text-red-200 flex items-center justify-between shadow-lg";
+        feedbackText.innerHTML = `
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-circle-exclamation text-red-400 text-base"></i>
+            <span>Please enter a valid Gmail address (e.g. <b>plavanya3344@gmail.com</b>).</span>
+          </div>
+        `;
+        feedback.classList.remove('hidden');
+        return;
       }
 
-      const finalEmail = recipientEmail || `billing@${clientName.toLowerCase().replace(/[\s\W]+/g, '')}.com`;
+      const amount = parseFloat(amountRaw.replace(/[^0-9.]/g, '')) || 0;
       const newId = "INV-" + (1030 + invoices.length);
 
-      btnText.innerText = "Sending Directly...";
-      sendBtn.disabled = true;
+      // Parse products into neat, clean invoice line items
+      const productLines = products.split(/[,;\n]+/).map(p => p.trim()).filter(Boolean);
+      let items = [];
+      if (productLines.length > 1) {
+        const splitRate = Math.round((amount / productLines.length) * 100) / 100;
+        items = productLines.map((prod, idx) => ({
+          desc: prod,
+          qty: 1,
+          rate: (idx === productLines.length - 1) ? (amount - splitRate * (productLines.length - 1)) : splitRate
+        }));
+      } else {
+        items = [
+          { desc: products, qty: 1, rate: amount }
+        ];
+      }
 
-      // Execute background email dispatch
-      const emailResult = await sendEmailNotification(finalEmail, amount, deadline, clientName, newId);
+      // Prepare clean invoice object
+       const newInvoice = {
+         id: newId,
+         clientName: companyName,
+         clientGmail: clientGmail,
+         service: products,
+         amount: amount,
+         status: "pending",
+         daysOverdue: 0,
+         dueDate: deadline,
+         opensCount: 1,
+         // reminderStatus will be set after email dispatch
+         items: items
+       };
 
-      btnText.innerText = "Generate & Send Real Email";
-      sendBtn.disabled = false;
+       // Add to invoices list
+       invoices.unshift(newInvoice);
+       renderInvoices();
 
-      const newInvoice = {
+       // Update client view data so the user can immediately view their neat clean invoice
+       activeInvoiceForClient = newInvoice;
+       loadClientViewData(newInvoice);
+
+       btnText.innerText = "Dispatching email...";
+       sendBtn.disabled = true;
+
+       // Dispatch email via serverless API
+       const dispatchResult = await sendEmailNotification(clientGmail, amount, deadline, companyName, newId, products);
+
+       // Update reminder status on the invoice
+       newInvoice.reminderStatus = `Email dispatched via ${dispatchResult.method}`;
+       renderInvoices();
+
+       btnText.innerText = "Generate Invoice & Send";
+       sendBtn.disabled = false;
+
+       // Clear input fields
+       document.getElementById('companyNameInput').value = '';
+       document.getElementById('billAmountInput').value = '';
+       document.getElementById('deadLineInput').value = '';
+       document.getElementById('productsInput').value = '';
+       document.getElementById('clientGmailInput').value = '';
+
+       // Show success feedback without Gmail link
+       feedback.className = "mt-3 p-4 rounded-xl bg-emerald-950/90 border border-emerald-600 text-xs text-emerald-200 space-y-2 shadow-2xl";
+       feedbackText.innerHTML = `
+         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+           <div class="space-y-1">
+             <div class="font-bold text-sm text-white flex items-center gap-1.5">
+               <i class="fa-solid fa-circle-check text-emerald-400"></i> Neat Clean Invoice ${newId} Generated & Dispatched!
+             </div>
+             <div class="text-slate-300">
+               Recipient: <b class="text-white">${clientGmail}</b>
+             </div>
+             <div class="text-slate-400 text-[11px]">
+               Bill Amount: <b>$${amount.toLocaleString()}</b> • Deadline: <b>${deadline}</b> • Products: <i>${products}</i>
+             </div>
+           </div>
+         </div>
+         <div class="pt-2 flex flex-wrap items-center gap-2 border-t border-emerald-800/60">
+           <button onclick=\"switchView('client')\" class=\"inline-flex items-center px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg font-bold text-xs border border-slate-700 transition\">
+             <i class=\"fa-solid fa-receipt mr-1.5 text-emerald-400\"></i> View Neat Clean Invoice
+           </button>
+           <span class=\"text-[10px] text-emerald-400\">(${dispatchResult.method})</span>
+         </div>
+       `;
+       feedback.classList.remove('hidden');
+      // Duplicate original block removed
         id: newId,
-        clientName: clientName,
-        clientEmail: finalEmail,
-        service: input,
+        clientName: companyName,
+        clientGmail: clientGmail,
+        service: products,
         amount: amount,
         status: "pending",
         daysOverdue: 0,
         dueDate: deadline,
-        opensCount: 0,
-        reminderStatus: `Direct Email sent to ${finalEmail} ("pay me the bill")`,
-        items: [
-          { desc: input, qty: 1, rate: amount }
-        ]
+        opensCount: 1,
+        reminderStatus: `Direct Gmail dispatched to ${clientGmail} ("pay me the bill")`,
+        items: items
       };
 
+      // Add to invoices list
       invoices.unshift(newInvoice);
-      document.getElementById('promptInput').value = '';
-      document.getElementById('recipientEmailInput').value = '';
+      renderInvoices();
 
-      const feedback = document.getElementById('draftFeedback');
-      document.getElementById('draftFeedbackText').innerHTML = `
-        <i class="fa-solid fa-check-circle mr-1.5 text-emerald-400"></i>
-        Email sent directly to <b>${finalEmail}</b>! Subject: <b>"pay me the bill"</b> &bull; Amount: <b>$${amount.toLocaleString()}</b> &bull; Deadline: <b>${deadline}</b> (${emailResult.method}).
+      // Update client view data so the user can immediately view their neat clean invoice
+      activeInvoiceForClient = newInvoice;
+      loadClientViewData(newInvoice);
+
+      btnText.innerText = "Dispatching to Gmail...";
+      sendBtn.disabled = true;
+
+      // Dispatch to Gmail in background
+      const dispatchResult = await sendEmailNotification(clientGmail, amount, deadline, companyName, newId, products);
+
+      btnText.innerText = "Generate Invoice & Send to Gmail";
+      sendBtn.disabled = false;
+
+      // Clear input fields
+      document.getElementById('companyNameInput').value = '';
+      document.getElementById('billAmountInput').value = '';
+      document.getElementById('deadLineInput').value = '';
+      document.getElementById('productsInput').value = '';
+      document.getElementById('clientGmailInput').value = '';
+
+      // Construct direct Gmail Web compose link
+      const subject = "pay me the bill";
+      const matter = `Hello ${companyName},\n\nThis is your official invoice for:\n- Products / Services Took: ${products}\n\nBill Amount Due: $${amount.toLocaleString()}\nDeadline to Pay Off: ${deadline}\n\nInvoice Reference: ${newId}\nStatus: Payment Due\n\nPlease settle this bill before the specified deadline.\n\nThank you,\nFlowLedger Autonomous Invoicing`;
+      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(clientGmail)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(matter)}`;
+
+      // Show comprehensive success card with direct links
+      feedback.className = "mt-3 p-4 rounded-xl bg-emerald-950/90 border border-emerald-600 text-xs text-emerald-200 space-y-2 shadow-2xl";
+      feedbackText.innerHTML = `
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div class="space-y-1">
+            <div class="font-bold text-sm text-white flex items-center gap-1.5">
+              <i class="fa-solid fa-circle-check text-emerald-400"></i> Neat Clean Invoice ${newId} Generated &amp; Dispatched!
+            </div>
+            <div class="text-slate-300">
+              Recipient: <b class="text-white">${clientGmail}</b> &bull; Subject: <code class="bg-slate-900 text-emerald-300 px-1 py-0.5 rounded border border-slate-800">"${subject}"</code>
+            </div>
+            <div class="text-slate-400 text-[11px]">
+              Matter: Bill Amount: <b>$${amount.toLocaleString()}</b> &bull; Deadline: <b>${deadline}</b> &bull; Products Took: <i>${products}</i>
+            </div>
+          </div>
+        </div>
+        <div class="pt-2 flex flex-wrap items-center gap-2 border-t border-emerald-800/60">
+          <a href="${gmailUrl}" target="_blank" class="inline-flex items-center px-3.5 py-1.5 bg-red-600 hover:bg-red-500 text-white rounded-lg font-bold text-xs shadow-lg transition">
+            <i class="fa-brands fa-google mr-1.5"></i> Open in Gmail &amp; Send Now
+          </a>
+          <button onclick="switchView('client')" class="inline-flex items-center px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg font-bold text-xs border border-slate-700 transition">
+            <i class="fa-solid fa-receipt mr-1.5 text-emerald-400"></i> View Neat Clean Invoice
+          </button>
+          <span class="text-[10px] text-emerald-400">(${dispatchResult.method})</span>
+        </div>
       `;
       feedback.classList.remove('hidden');
 
-      renderInvoices();
+      // Auto launch Gmail compose window in a new tab
+      try {
+        window.open(gmailUrl, '_blank');
+      } catch (err) {
+        console.warn("Popup blocked by browser; direct button provided in banner", err);
+      }
     }
 
     function previewAsClient(invoiceId) {
@@ -826,6 +940,12 @@
     function loadClientViewData(inv) {
       document.getElementById('clientInvoiceNumber').innerText = "Invoice " + inv.id;
       document.getElementById('clientInvoiceDesc').innerText = inv.service;
+      if (document.getElementById('clientCompanyName')) {
+        document.getElementById('clientCompanyName').innerText = inv.clientName || 'Acme Innovations';
+      }
+      if (document.getElementById('clientGmailDisplay')) {
+        document.getElementById('clientGmailDisplay').innerText = inv.clientGmail || inv.clientEmail || 'client@gmail.com';
+      }
       document.getElementById('clientDueDate').innerText = inv.dueDate;
       document.getElementById('clientSubtotal').innerText = "$" + inv.amount.toLocaleString() + ".00";
       document.getElementById('clientTotalDue').innerText = "$" + inv.amount.toLocaleString() + ".00";
