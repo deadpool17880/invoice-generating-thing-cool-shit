@@ -666,12 +666,6 @@
 
     // Direct Background / Serverless Email Dispatch Function
     async function sendEmailNotification(toGmail, amount, deadline, clientName, invoiceId, products) {
-      const subject = "pay me the bill";
-      const messageBody = `Hello ${clientName},\n\nThis is an official invoice notification regarding your pending bill (${invoiceId}).\n\n- Products / Services Took: ${products || 'Consulting & Development'}\n- Bill Amount Due: $${Number(amount || 0).toLocaleString()}\n- Deadline to Pay Off: ${deadline}\n\nPlease settle this bill before the specified deadline.\n\nThank you,\nFlowLedger Autonomous Invoicing`;
-
-      let usedMethod = "Direct Gmail Web Transmission";
-
-      // Call Vercel Serverless Function (/api/send-email)
       try {
         const apiRes = await fetch("/api/send-email", {
           method: "POST",
@@ -686,18 +680,20 @@
           })
         });
 
-        if (apiRes.ok) {
-          const apiData = await apiRes.json();
-          if (apiData.success) {
-            usedMethod = `Vercel Serverless API (${apiData.provider || 'Verified Relay'})`;
-          }
+        const apiData = await apiRes.json();
+
+        if (apiData.success) {
+          return { success: true, method: `Resend (${apiData.provider || 'Verified Relay'})` };
+        } else {
+          // Real error from Resend — show it to the user
+          const errMsg = apiData.error || apiData.message || 'Unknown error from email provider';
+          return { success: false, method: 'Failed', error: errMsg };
         }
       } catch (e) {
-        console.warn("Local/Vercel serverless endpoint note:", e);
+        return { success: false, method: 'Failed', error: e.message || 'Network error calling /api/send-email' };
       }
-
-      return { success: true, method: usedMethod };
     }
+
 
     function sendRealEmailModal(invoiceId) {
       const inv = invoices.find(i => i.id === invoiceId);

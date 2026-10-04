@@ -56,8 +56,8 @@ export default async function handler(req, res) {
       </div>
     `;
 
-    // Attempt 1: Resend API if configured
-    const RESEND_API_KEY = apiKey || process.env.RESEND_API_KEY;
+    // Try Resend API
+    const RESEND_API_KEY = process.env.RESEND_API_KEY;
     if (RESEND_API_KEY) {
       const resendRes = await fetch('https://api.resend.com/emails', {
         method: 'POST',
@@ -74,11 +74,21 @@ export default async function handler(req, res) {
         })
       });
 
-      if (resendRes.ok) {
-        const data = await resendRes.json();
-        return res.status(200).json({ success: true, provider: 'Resend', data });
+      const resendData = await resendRes.json();
+
+      if (resendRes.ok && !resendData.error) {
+        return res.status(200).json({ success: true, provider: 'Resend', data: resendData });
+      } else {
+        // Return the actual Resend error so the UI can show it
+        return res.status(400).json({
+          success: false,
+          provider: 'Resend',
+          error: resendData.message || resendData.error || 'Resend rejected the request',
+          detail: resendData
+        });
       }
     }
+
 
     // Attempt 2: Brevo API if configured
     const BREVO_API_KEY = apiKey || process.env.BREVO_API_KEY;
